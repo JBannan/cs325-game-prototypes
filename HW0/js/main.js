@@ -5,21 +5,31 @@ function make_main_game_state( game )
     function preload() {
         // Load an image and call it 'logo'.
         game.load.image( 'logo', 'assets/phaser.png' );
+        game.load.image( 'player', 'assets/player_sprite.png')
+        game.load.image( 'world_block', 'assets/block1.png')
     }
     
     var bouncy;
+    var block;
+    var player;
     
     function create() {
         // Create a sprite at the center of the screen using the 'logo' image.
         bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
+        block = game.add.sprite(70, 70, 'world_block');
+        player = game.add.sprite(7, 7, 'player');
+
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
         bouncy.anchor.setTo( 0.5, 0.5 );
+        player.anchor.setTo(0.5, 0.5);
+
         
         // Turn on the arcade physics engine for this sprite.
         game.physics.enable( bouncy, Phaser.Physics.ARCADE );
+        game.physics.enable( player, Phaser.Physics.ARCADE);
         // Make it bounce off of the world bounds.
-        bouncy.body.collideWorldBounds = true;
+        player.body.collideWorldBounds = true;
         
         // Add some text using a CSS style.
         // Center it in X, and position its top 15 pixels from the top of the world.
