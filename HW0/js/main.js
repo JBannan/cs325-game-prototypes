@@ -1,4 +1,6 @@
 "use strict";
+const WIDTH = 800;
+const HEIGHT = 600;
 
 function make_main_game_state( game )
 {
@@ -7,18 +9,35 @@ function make_main_game_state( game )
         game.load.image( 'logo', 'assets/phaser.png' );
         game.load.image( 'player', 'assets/player_sprite.png')
         game.load.image( 'world_block', 'assets/block1.png')
+        game.load.image( 'bullet', 'assets/bullet.png')
     }
     
     var bouncy;
     var block;
     var player;
+    var weapon;
+    var bullet;
+    var fireButton;
     
+    function addBlocks() {
+        let i = 0;
+        while (i < (WIDTH/32)) {
+            
+        }
+    }
+
     function create() {
         // Create a sprite at the center of the screen using the 'logo' image.
         bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
-        block = game.add.sprite(70, 70, 'world_block');
-        player = game.add.sprite(7, 7, 'player');
+        block = game.add.sprite(9, 70, 'world_block');
+        player = game.add.sprite(7, HEIGHT-100, 'player');
+        weapon = game.add.weapon(10, 'bullet');
 
+        weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
+        weapon.bulletLifespan = 4000;
+        weapon.bulletSpeed = 600;
+        weapon.fireRate = 50;
+        weapon.bulletWorldWrap = false;
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
         bouncy.anchor.setTo( 0.5, 0.5 );
@@ -64,7 +83,7 @@ window.onload = function() {
     // loading functions to reflect where you are putting the assets.
     // All loading functions will typically all be found inside "preload()".
     
-    var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game' );
+    var game = new Phaser.Game( WIDTH, HEIGHT, Phaser.AUTO, 'game' );
     
     game.state.add( "main", make_main_game_state( game ) );
     
