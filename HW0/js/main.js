@@ -4,51 +4,85 @@ const HEIGHT = 600;
 
 function make_main_game_state( game )
 {
+
     function preload() {
         // Load an image and call it 'logo'.
-        game.load.image( 'logo', 'assets/phaser.png' );
-        game.load.image( 'player', 'assets/player_sprite.png')
-        game.load.image( 'world_block', 'assets/block1.png')
-        game.load.image( 'bullet', 'assets/bullet.png')
+        //game.load.image( 'logo', 'assets/phaser.png' );
+        game.load.image( 'player', 'assets/player_sprite1.png');
+        game.load.image( 'world_block', 'assets/block1.png');
+        game.load.image( 'bullet', 'assets/bullet.png');
+        game.load.image( 'enemy', 'assets/enemy_sprite.png');
     }
     
-    var bouncy;
+    //var bouncy;
     var block;
     var player;
     var weapon;
-    var bullet;
     var fireButton;
-    
-    function addBlocks() {
-        let i = 0;
-        while (i < (WIDTH/32)) {
-            
-        }
-    }
+    var cursors;
+    var platforms;
+    var enemies;
+
 
     function create() {
         // Create a sprite at the center of the screen using the 'logo' image.
-        bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
-        block = game.add.sprite(9, 70, 'world_block');
-        player = game.add.sprite(7, HEIGHT-100, 'player');
-        weapon = game.add.weapon(10, 'bullet');
+        //bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
+        
+        // Platforms
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        platforms = game.add.group();
+        platforms.enableBody = true;
+        for (let i = 0; i < WIDTH/32; i++) {
+            block = platforms.create(32*i, game.world.height - 32, 'world_block');
+            block.body.immovable = true;
+        }
+        for (let i = 0; i < (WIDTH/32)/3; i++) {
+            block = platforms.create(32*i, game.world.height - 64 - (game.world.height*0.2), 'world_block');
+            block.body.immovable = true;
+            block = platforms.create(game.world.width - (32*i), game.world.height - 64 - (game.world.height*0.1), 'world_block');
+            block.body.immovable = true;
+            
+        }
+        /*Enemies Section
+        enemies = game.add.group();
+        enemies.enableBody = true;
+        enemies.physicsBodyType = Phaser.Physics.ARCADE;
+        for (let i = 0; i < 3; i++) {
+            var enemy = enemies.create(Math.random() % game.world.width, Math.random() % game.world.height - 90, 'enemy');
+        }*/
 
+        //Weapon Section
+        weapon = game.add.weapon(30, 'bullet');
         weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
-        weapon.bulletLifespan = 4000;
+        weapon.bulletLifespan = 2000;
         weapon.bulletSpeed = 600;
-        weapon.fireRate = 50;
-        weapon.bulletWorldWrap = false;
+        weapon.fireRate = 100;
+        weapon.bulletAngleVariance = 7;
+        weapon.multiFire = true;
+        weapon.bulletCollideWorldBounds = true;
+        game.physics.enable(Phaser.Bullet, Phaser.Physics.ARCADE);
+        weapon.bullets.setAll('body.bounce.x', 1);
+        weapon.bullets.setAll('body.bounce.y', 1);
+
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
-        bouncy.anchor.setTo( 0.5, 0.5 );
-        player.anchor.setTo(0.5, 0.5);
+       // bouncy.anchor.setTo( 0.5, 0.5 );
 
-        
+       //Player Section
+        player = game.add.sprite(7, HEIGHT-100, 'player'); 
+        player.anchor.setTo(0.5, 0.5);
         // Turn on the arcade physics engine for this sprite.
-        game.physics.enable( bouncy, Phaser.Physics.ARCADE );
+        //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
         game.physics.enable( player, Phaser.Physics.ARCADE);
+        
         // Make it bounce off of the world bounds.
+        player.body.bounce.y = 0.1;
+        player.body.gravity.y = 900;
         player.body.collideWorldBounds = true;
+        weapon.trackSprite(player, 0, 0, true);
+
+        cursors = this.input.keyboard.createCursorKeys();
+        fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
         
         // Add some text using a CSS style.
         // Center it in X, and position its top 15 pixels from the top of the world.
@@ -63,7 +97,32 @@ function make_main_game_state( game )
         // in X or Y.
         // This function returns the rotation angle that makes it visually match its
         // new trajectory.
-        bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
+        // bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
+        
+        player.body.velocity.x = 0;
+        var hitPlatform = game.physics.arcade.collide(player, platforms);
+        //var bulletWorldHit = game.physics.arcade.collide(weapon.bullets, World.bounds);
+
+        if (cursors.left.isDown) {
+            player.body.velocity.x = -200;
+        }
+        else if (cursors.right.isDown) {
+            player.body.velocity.x = 200;
+        }
+
+        if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
+            player.body.velocity.y = -500;
+        }
+    
+        if (fireButton.isDown)
+        {
+            weapon.fireAtPointer(game.input.activePointer);
+           // Shotgun it
+           //weapon.fireAtPointer(game.input.activePointer);
+           // weapon.fireAtPointer(game.input.activePointer);
+        }
+
+        
     }
     
     return { "preload": preload, "create": create, "update": update };
