@@ -12,6 +12,7 @@ function make_main_game_state( game )
         game.load.image( 'world_block', 'assets/block1.png');
         game.load.image( 'bullet', 'assets/bullet.png');
         game.load.image( 'enemy', 'assets/enemy_sprite.png');
+        game.load.audio('weapon_fire', 'assets/Laser_Shoot.wav');
     }
     
     //var bouncy;
@@ -22,6 +23,8 @@ function make_main_game_state( game )
     var cursors;
     var platforms;
     var enemies;
+    var fx;
+    var enemy;
 
 
     function create() {
@@ -30,26 +33,32 @@ function make_main_game_state( game )
         
         // Platforms
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        fx = game.add.audio('weapon_fire');
+        fx.allowMultiple = true;
+
+        fx.addMarker('shoot', 0, 5, 1, false, false);
+
+
         platforms = game.add.group();
         platforms.enableBody = true;
         for (let i = 0; i < WIDTH/32; i++) {
             block = platforms.create(32*i, game.world.height - 32, 'world_block');
-            block.body.immovable = true;
+       
         }
         for (let i = 0; i < (WIDTH/32)/3; i++) {
-            block = platforms.create(32*i, game.world.height - 64 - (game.world.height*0.2), 'world_block');
-            block.body.immovable = true;
-            block = platforms.create(game.world.width - (32*i), game.world.height - 64 - (game.world.height*0.1), 'world_block');
-            block.body.immovable = true;
+            block = platforms.create(32*i, game.world.height - 108 - (game.world.height*0.2), 'world_block');
+           
+            block = platforms.create(game.world.width - (32*i), game.world.height - 32 - (game.world.height*0.15), 'world_block');
+            
+            block = platforms.create((game.world.width*0.33) + 32*i, (game.world.height*0.05) + 64, 'world_block');
             
         }
-        /*Enemies Section
-        enemies = game.add.group();
-        enemies.enableBody = true;
-        enemies.physicsBodyType = Phaser.Physics.ARCADE;
-        for (let i = 0; i < 3; i++) {
-            var enemy = enemies.create(Math.random() % game.world.width, Math.random() % game.world.height - 90, 'enemy');
-        }*/
+        for (let i = 0; i < (WIDTH/32)/4; i++) {
+            block = platforms.create( (game.world.width*0.66) + 32*i, game.world.height - 32 - (game.world.height*0.33 + 32), 'world_block');
+            
+        }
+        platforms.setAll('body.immovable', true);
+
 
         //Weapon Section
         weapon = game.add.weapon(30, 'bullet');
@@ -57,12 +66,13 @@ function make_main_game_state( game )
         weapon.bulletLifespan = 2000;
         weapon.bulletSpeed = 600;
         weapon.fireRate = 100;
-        weapon.bulletAngleVariance = 7;
+        //weapon.bulletAngleVariance = 7; // Turn on for Shotgun
         weapon.multiFire = true;
         weapon.bulletCollideWorldBounds = true;
-        game.physics.enable(Phaser.Bullet, Phaser.Physics.ARCADE);
+        game.physics.enable(weapon.bullets, Phaser.Physics.ARCADE);
         weapon.bullets.setAll('body.bounce.x', 1);
         weapon.bullets.setAll('body.bounce.y', 1);
+        weapon.bullets.enableBody = true;
 
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
@@ -81,6 +91,12 @@ function make_main_game_state( game )
         player.body.collideWorldBounds = true;
         weapon.trackSprite(player, 0, 0, true);
 
+        //Enemies Section
+        enemies = game.add.group();
+        enemies.enableBody = true;
+        enemies.physicsBodyType = Phaser.Physics.ARCADE;
+        createEnemies();
+
         cursors = this.input.keyboard.createCursorKeys();
         fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
         
@@ -89,6 +105,26 @@ function make_main_game_state( game )
         var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
         var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
         text.anchor.setTo( 0.5, 0.0 );
+    }
+
+    function createEnemies() {
+        // Platform 1
+        enemy = enemies.create(100, game.world.height - 145 - (game.world.height*0.2), 'enemy');
+        // Platform 2
+        enemy = enemies.create(game.world.width - 48, game.world.height - 70 - (game.world.height*0.15), 'enemy');
+        enemy = enemies.create(game.world.width - 168, game.world.height - 70 - (game.world.height*0.15), 'enemy');
+        // Platform 3
+        enemy = enemies.create(game.world.centerX, 0, 'enemy');
+        // Platform 4
+        enemy = enemies.create(game.world.width - (game.world.width*0.20), 0, 'enemy');
+        // Floor
+        enemy = enemies.create(game.world.width - 50, game.world.height - (32 + 36), 'enemy');
+        
+        enemies.setAll('body.gravity.y', 900);
+        enemies.setAll('body.bounce.y', 0.2);
+        enemies.setAll('body.bounce.x', 0.2);
+        enemies.setAll('body.drag.x', 100);
+        enemies.setAll('body.collideWorldBounds', true);
     }
     
     function update() {
@@ -101,7 +137,9 @@ function make_main_game_state( game )
         
         player.body.velocity.x = 0;
         var hitPlatform = game.physics.arcade.collide(player, platforms);
-        //var bulletWorldHit = game.physics.arcade.collide(weapon.bullets, World.bounds);
+        var bulletWorldHit = game.physics.arcade.collide(weapon.bullets, platforms);
+        game.physics.arcade.collide(enemies, platforms);
+        game.physics.arcade.collide(weapon.bullets, enemies, enemyHit);
 
         if (cursors.left.isDown) {
             player.body.velocity.x = -200;
@@ -111,12 +149,15 @@ function make_main_game_state( game )
         }
 
         if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
-            player.body.velocity.y = -500;
+            player.body.velocity.y = -550;
         }
     
-        if (fireButton.isDown)
+        if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR))
         {
             weapon.fireAtPointer(game.input.activePointer);
+            
+            fx.play('shoot');
+            
            // Shotgun it
            //weapon.fireAtPointer(game.input.activePointer);
            // weapon.fireAtPointer(game.input.activePointer);
@@ -125,8 +166,14 @@ function make_main_game_state( game )
         
     }
     
+    function enemyHit(bullet, enemy) {
+        bullet.kill();
+        enemy.kill();
+    }
+
     return { "preload": preload, "create": create, "update": update };
 }
+
 
 
 window.onload = function() {
