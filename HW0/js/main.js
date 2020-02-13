@@ -13,6 +13,8 @@ function make_main_game_state( game )
         game.load.image( 'bullet', 'assets/bullet.png');
         game.load.image( 'enemy', 'assets/enemy_sprite.png');
         game.load.audio('weapon_fire', 'assets/Laser_Shoot.wav');
+        game.load.audio('boing', 'assets/Jump.wav');
+        game.load.audio('boom', 'assets/Explosion.wav');
     }
     
     //var bouncy;
@@ -23,7 +25,10 @@ function make_main_game_state( game )
     var cursors;
     var platforms;
     var enemies;
-    var fx;
+    var shootfx;
+    var boomfx;
+    var boingfx;
+    var fxParent;
     var enemy;
 
 
@@ -33,10 +38,21 @@ function make_main_game_state( game )
         
         // Platforms
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        fx = game.add.audio('weapon_fire');
-        fx.allowMultiple = true;
 
-        fx.addMarker('shoot', 0, 5, 1, false, false);
+        fxParent = game.add.group();
+
+         shootfx = game.add.audio('weapon_fire');
+        shootfx.addMarker('shoot', 0, 5, 1, false, false);
+         boingfx = game.add.audio('boing');
+        boingfx.addMarker('boing', 0, 5, 1, false, false);
+         boomfx = game.add.audio('boom');
+        boomfx.addMarker('boom', 0, 5, 1, false, false);
+        //fxParent.allowMultiple = true;
+
+        
+        
+        
+
 
 
         platforms = game.add.group();
@@ -148,15 +164,16 @@ function make_main_game_state( game )
             player.body.velocity.x = 200;
         }
 
-        if (cursors.up.isDown && player.body.touching.down && hitPlatform) {
+        if (game.input.keyboard.justPressed(Phaser.Keyboard.UP) && player.body.touching.down && hitPlatform) {
             player.body.velocity.y = -550;
+            boingfx.play('boing');
         }
     
         if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR))
         {
             weapon.fireAtPointer(game.input.activePointer);
             
-            fx.play('shoot');
+            shootfx.play('shoot');
             
            // Shotgun it
            //weapon.fireAtPointer(game.input.activePointer);
@@ -167,6 +184,7 @@ function make_main_game_state( game )
     }
     
     function enemyHit(bullet, enemy) {
+        boomfx.play('boom');
         bullet.kill();
         enemy.kill();
     }
