@@ -88,6 +88,7 @@ function make_main_game_state( game )
         game.physics.enable(weapon.bullets, Phaser.Physics.ARCADE);
         weapon.bullets.setAll('body.bounce.x', 1);
         weapon.bullets.setAll('body.bounce.y', 1);
+        weapon.bullets.setAll('body.gravity.y', 900);
         weapon.bullets.enableBody = true;
 
         // Anchor the sprite at its center, as opposed to its top-left corner.
