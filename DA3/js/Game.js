@@ -180,6 +180,12 @@ GameStates.makeGame = function( game, shared ) {
                 snakeSection[i].y = (snakePath[i * snakeSpacer]).y;
             }
 
+            if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR))
+            {
+                chicken.body.velocity.x *= 2;
+                chicken.body.velocity.y *= 2;
+            }
+
             /*
             if (cursors.left.isDown) {
                 chicken.body.velocity.x = -200;
