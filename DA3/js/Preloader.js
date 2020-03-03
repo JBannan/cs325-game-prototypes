@@ -28,6 +28,9 @@ GameStates.makePreloader = function( game ) {
             game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
+            game.load.spritesheet( 'segments', 'assets/segments.png', 16, 16);
+            game.load.spritesheet( 'chickens', 'assets/jODGJn4-1.png', 48, 48);
+            game.load.image('ball', 'assets/bullet.png');
         },
     
         create: function () {

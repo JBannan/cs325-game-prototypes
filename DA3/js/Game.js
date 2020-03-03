@@ -3,6 +3,19 @@
 GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
     var bouncy = null;
+    var chicken = null;
+    var cursors = null;
+    var score = 0;
+    var line;
+    var drawLine = false;
+    var mouse;
+    var mouseSpring;
+    var snakeHead; //head of snake sprite
+    var snakeSection = new Array(); //array of sprites that make the snake body sections
+    var snakePath = new Array(); //arrary of positions(points) that have to be stored for the path the sections follow
+    var numSnakeSections = 20; //number of snake body sections
+    var snakeSpacer = 6; //parameter that sets the spacing between sections
+
     
     function quitGame() {
 
@@ -17,31 +30,124 @@ GameStates.makeGame = function( game, shared ) {
     return {
     
         create: function () {
-    
+
+            game.world.setBounds(0, 0, 800, 600);
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
+            game.physics.startSystem(Phaser.Physics.ARCADE);
+            game.physics.startSystem(Phaser.Physics.P2JS);
+            game.physics.p2.gravity.y = 100;
+            game.physics.p2.restitution = 0.8;
             
             // Create a sprite at the center of the screen using the 'logo' image.
-            bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
+            chicken = game.add.sprite(100, 100, 'chickens');
+            chicken.animations.add('white_down', [0,1,2,1], 13, true);
+            chicken.animations.add('white_up', [36,37,38,37], 13, true);
+            chicken.animations.add('white_left', [12,13,14,13], 13, true);
+            chicken.animations.add('white_right', [24,25,26,25], 13, true);
+            
+            snakeHead = game.add.sprite(400, 300, 'segment');
+            snakeHead.anchor.setTo(0.5, 0.5);
+            game.physics.enable(snakeHead, Phaser.Physics.ARCADE);
+            
+            //  Init snakeSection array
+            for (var i = 1; i <= numSnakeSections-1; i++)
+            {
+                snakeSection[i] = game.add.sprite(400, 300, 'segment');
+                snakeSection[i].anchor.setTo(0.5, 0.5);
+                //snakeSection[i].frame(2);
+            }
+            
+            //  Init snakePath array
+            for (var i = 0; i <= numSnakeSections * snakeSpacer; i++)
+            {
+                snakePath[i] = new Phaser.Point(400, 300);
+            }
+            
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
-            bouncy.anchor.setTo( 0.5, 0.5 );
+            chicken.anchor.setTo(0.5, 0.5 );
             
             // Turn on the arcade physics engine for this sprite.
-            game.physics.enable( bouncy, Phaser.Physics.ARCADE );
-            // Make it bounce off of the world bounds.
-            bouncy.body.collideWorldBounds = true;
+            game.physics.p2.enable( chicken, true );
+            chicken.body.collideWorldBounds = true;
+            chicken.body.setCircle(20);
+            
+            mouse = game.add.sprite(100, 100, 'ball');
+            game.physics.p2.enable(mouse, true);
+            mouse.body.static = true;
+            mouse.body.setCircle(10);
+            mouse.body.data.shapes[0].sensor = true;
             
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
             var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-            var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
+            var text = game.add.text( game.world.centerX, 15, ("Score: " + score.toString()), style );
             text.anchor.setTo( 0.5, 0.0 );
             
             // When you click on the sprite, you go back to the MainMenu.
-            bouncy.inputEnabled = true;
-            bouncy.events.onInputDown.add( function() { quitGame(); }, this );
+            line = new Phaser.Line(chicken.x, chicken.y, mouse.x, mouse.y);
+
+            game.input.onDown.add(this.click, this);
+            game.input.onUp.add(this.release, this);
+            game.input.addMoveCallback(this.move, this);
+            
+            cursors = this.input.keyboard.createCursorKeys();
+            //game.input.keyboard.onUpCallback = function (e) {
+                // These can be checked against Phaser.Keyboard.UP, for example.
+            //    chicken.body.velocity.x = 0;
+            //    chicken.body.velocity.y = 0;
+            //    chicken.animations.stop();
+            //};
         },
     
+        click: function (pointer) {
+
+            var bodies = game.physics.p2.hitTest(pointer.position, [ chicken.body ]);
+            
+            if (bodies.length)
+            {
+                //  Attach to the first body the mouse hit
+                mouseSpring = game.physics.p2.createSpring(mouse, bodies[0], 0, 30, 1);
+                line.setTo(chicken.x, chicken.y, mouse.x, mouse.y);
+                drawLine = true;
+            }
+
+        },
+        
+        release: function () {
+
+            game.physics.p2.removeSpring(mouseSpring);
+
+            drawLine = false;
+            
+        },
+
+        move: function (pointer, x, y, isDown) {
+
+            mouse.body.x = x;
+            mouse.body.y = y;
+            line.setTo(chicken.x, chicken.y, mouse.x, mouse.y);
+
+        },
+        
+        preRender: function () {
+
+            if (line)
+            {
+                line.setTo(chicken.x, chicken.y, mouse.x, mouse.y);
+            }
+
+        },
+
+        render: function () {
+
+            if (drawLine)
+            {
+                game.debug.geom(line);
+            }
+
+        },
+        
         update: function () {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
@@ -51,7 +157,47 @@ GameStates.makeGame = function( game, shared ) {
             // in X or Y.
             // This function returns the rotation angle that makes it visually match its
             // new trajectory.
-            bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
+            
+            snakeHead.body.velocity.setTo(0, 0);
+            snakeHead.body.angularVelocity = 0;
+
+            snakeHead.rotation = game.physics.arcade.moveToXY( snakeHead, chicken.x, chicken.y, 50 );
+            
+            snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
+
+            // Everytime the snake head moves, insert the new location at the start of the array, 
+            // and knock the last position off the end
+
+            var part = snakePath.pop();
+
+            part.setTo(snakeHead.x, snakeHead.y);
+
+            snakePath.unshift(part);
+
+            for (var i = 1; i <= numSnakeSections - 1; i++)
+            {
+                snakeSection[i].x = (snakePath[i * snakeSpacer]).x;
+                snakeSection[i].y = (snakePath[i * snakeSpacer]).y;
+            }
+
+            /*
+            if (cursors.left.isDown) {
+                chicken.body.velocity.x = -200;
+                chicken.animations.play('white_left');
+            }
+            else if (cursors.right.isDown) {
+                chicken.body.velocity.x = 200;
+                chicken.animations.play('white_right');
+            }
+    
+            if (cursors.up.isDown) {
+                chicken.body.velocity.y = -200;
+                chicken.animations.play('white_up');
+            }
+            else if (cursors.down.isDown) {
+                chicken.body.velocity.y = 200;
+                chicken.animations.play('white_down');
+            }*/
         }
     };
 };
