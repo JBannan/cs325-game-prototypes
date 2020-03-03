@@ -15,6 +15,7 @@ GameStates.makeGame = function( game, shared ) {
     var snakePath = new Array(); //arrary of positions(points) that have to be stored for the path the sections follow
     var numSnakeSections = 20; //number of snake body sections
     var snakeSpacer = 6; //parameter that sets the spacing between sections
+    var space;
 
     
     function quitGame() {
@@ -92,6 +93,7 @@ GameStates.makeGame = function( game, shared ) {
             game.input.addMoveCallback(this.move, this);
             
             cursors = this.input.keyboard.createCursorKeys();
+            space = game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
             //game.input.keyboard.onUpCallback = function (e) {
                 // These can be checked against Phaser.Keyboard.UP, for example.
             //    chicken.body.velocity.x = 0;
