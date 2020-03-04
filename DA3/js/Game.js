@@ -46,14 +46,15 @@ GameStates.makeGame = function( game, shared ) {
             chicken.animations.add('white_left', [12,13,14,13], 13, true);
             chicken.animations.add('white_right', [24,25,26,25], 13, true);
             
-            snakeHead = game.add.sprite(400, 300, 'segment');
+            snakeHead = game.add.sprite(400, 300, 'segments', 0);
             snakeHead.anchor.setTo(0.5, 0.5);
             game.physics.enable(snakeHead, Phaser.Physics.ARCADE);
             
             //  Init snakeSection array
             for (var i = 1; i <= numSnakeSections-1; i++)
             {
-                snakeSection[i] = game.add.sprite(400, 300, 'segment');
+                snakeSection[i] = game.add.sprite(400, 300, 'segments', 1);
+
                 snakeSection[i].anchor.setTo(0.5, 0.5);
                 //snakeSection[i].frame(2);
             }
@@ -163,9 +164,9 @@ GameStates.makeGame = function( game, shared ) {
             snakeHead.body.velocity.setTo(0, 0);
             snakeHead.body.angularVelocity = 0;
 
-            snakeHead.rotation = game.physics.arcade.moveToXY( snakeHead, chicken.x, chicken.y, 50 );
+            snakeHead.rotation = game.physics.arcade.angleToXY( snakeHead, chicken.x, chicken.y );
             
-            snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 300));
+            snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 100));
 
             // Everytime the snake head moves, insert the new location at the start of the array, 
             // and knock the last position off the end
