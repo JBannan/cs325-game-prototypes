@@ -33,7 +33,7 @@ body
 
 <ul>
 <li><strong>Originality:</strong>
-What is original about your game?
+My game uses phaser springs as a way to control the player chicken. Rather than following the mouse pointer or using the arrow keys, the player must fling the chicken around to collect the eggs.
 </li>
 
 <li><strong>Technical Merit:</strong>
@@ -41,13 +41,13 @@ The game has more customized hit-boxes to fit the sprites better allowing better
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-Combining two different physics systems in phaser isn't possible as there is no way for the objects to interact with each other.
+Combining two different physics systems in phaser isn't possible and there is no way for the objects to interact with each other. The snake was originally made using Arcade physics like it was in a phaser example. The chicken was made following a P2 physics spring example and the egg was made to have a custom collision region. 
+Phaser doesn't allow for these two systems to interact and so the snakes movement had to be changed to be in line with P2 physics systems.
 </li>
 
 <li><strong>Prototype Assets:</strong>
-Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
 <ul>
-<li>Loading screen: self-made</li>
+<li>Loading screen: Supplied from template</li>
 <li>Chicken: <a href="https://rpgtileset.com/sprite/giant-chickens-sprite-for-rpg-maker-mv/">rpgtileset.com</a></li>
 <li>Egg image: <a href="http://pixelartmaker.com/art/4b4b065c35b8482">pixelartmaker.com</a></li>
 <li>Button: Phaser example <a href="https://phaser.io/examples/v2/buttons/action-on-click">Action On Click</a></li>
@@ -58,14 +58,15 @@ Did you make your prototype assets from scratch? Did you borrow them? Cite your 
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
-Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
 <ul>
 <li>The code for this example is adapted from the <a href="https://github.com/photonstorm/phaser/tree/v2.6.2/resources/Project%20Templates/Basic">Phaser Basic Project Template</a></li>
+<li>The snake was modified from the Phaser snake example</li>
+<li>The chicken and controls were modified from the Phaser P2 physics spring example</li>
 </ul>
 </li>
 
 <li><strong>High Concept:</strong>
-A one-sentence summary of your game.
+Fling the chicken around to collect the eggs before the snake eats them.
 </li>
 
 <li><strong>Theme: </strong>
@@ -73,36 +74,35 @@ Chicken
 </li>
 
 <li><strong>Mandated Variety:</strong>
-State which input, randomness, genre, and play style you used in this prototype.
+The controls use the mouse pointer as an end point of a spring to fling the chicken around. The game has a score system, though it does not persist between attempts. The player has a limited number of lives as well. The enemy now moves and can harm the player.
 </li>
 
 <li><strong>Prototype Goal:</strong>
-What game mechanic is this prototype evaluating?
+This game was made to test phasers P2 physics system. The main parts being tested were the spring system and the custom collision areas.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-What experience do you want players to have when playing your game?
+The player should 
 </li>
 
 <li><strong>Gameplay:</strong>
- Click and hold to drag the chicken towards the mouse. Fling the chicken at the eggs to collect them. The snake currently doesn't do anything, but the idea was to avoid it. Hitting spacebar will take you to the main menu and set your score to zero.
+ Click and hold to drag the chicken towards the mouse. Fling the chicken at the eggs to collect them. The snake will also attempt to eat the eggs. If the snake eats an egg your score will decrease. If the snake hits the chicken more than 10 times, the game is over.
 </li>
 
 <li><strong>Strategies:</strong>
-What player strategies do you expect will be effective at playing this game?
+The player can play for as long as possible without mush risk of game over by balancing the amount of eggs they collect with the amount the snake eats. The snakes speed is tied to the players score so the player has to keep the chicken from flying too far away to maintain decent control and not get hurt.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, mention it here. If the game is abstract, then say so.
-How will the dramatic tension interact with the gameplay tension?
+A hungry snake has slithered its way into the chickens home. The chicken (player) must rescue the eggs before they get eaten by the snake.
 </li>
 
 <li><strong>Target Audience:</strong>
-A single sentence that describes the demographic you're trying to reach.
+Players with a bit of free time looking for a mindless game to play.
 </li>
 
 <li><strong>Play Time:</strong>
-How long does your game take to play?
+ Under 2 Minutes
 </li>
 
 </ul>
