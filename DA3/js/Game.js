@@ -1,6 +1,6 @@
 "use strict";
 
-GameStates.makeGame = function( game, shared ) {
+GameStates.makeGame = function (game, shared) {
     // Create your own variables.
     var bouncy = null;
     var chicken = null;
@@ -15,12 +15,13 @@ GameStates.makeGame = function( game, shared ) {
     var snakePath = new Array(); //arrary of positions(points) that have to be stored for the path the sections follow
     var numSnakeSections = 20; //number of snake body sections
     var snakeSpacer = 6; //parameter that sets the spacing between sections
+    var hasDead = false;
     var space;
     var egg;
     var chickenCollisionGroup;
     var eggCollisionGroup;
     var eggGroup;
-    
+
     function quitGame() {
 
         //  Here you should destroy anything you no longer need.
@@ -30,9 +31,9 @@ GameStates.makeGame = function( game, shared ) {
         game.state.start('MainMenu');
 
     }
-    
+
     return {
-    
+
         create: function () {
 
             game.world.setBounds(0, 0, 800, 600);
@@ -49,59 +50,46 @@ GameStates.makeGame = function( game, shared ) {
 
             //  This part is vital if you want the objects with their own collision groups to still collide with the world bounds
             //  (which we do) - what this does is adjust the bounds to use its own collision group.
-            game.physics.p2.updateBoundsCollisionGroup();   
-            
+            game.physics.p2.updateBoundsCollisionGroup();
+
             eggGroup = game.add.group();
             eggGroup.enableBody = true;
             eggGroup.physicsBodyType = Phaser.Physics.P2JS;
 
-            egg = eggGroup.create(game.world.randomX, game.world.randomY, 'egg');
-            egg.body.clearShapes();
-            egg.body.loadPolygon('physics', 'egg');
-            egg.setScaleMinMax(0.5);
-
-            //  Tell the panda to use the pandaCollisionGroup 
-            egg.body.setCollisionGroup(eggCollisionGroup);
-
-            //  Pandas will collide against themselves and the player
-            //  If you don't set this they'll not collide with anything.
-            //  The first parameter is either an array or a single collision group.
-            egg.body.collides([eggCollisionGroup, chickenCollisionGroup]);
+            this.spawnEgg();
 
             //this.spawnEgg();
 
             // Create a sprite at the center of the screen using the 'logo' image.
             chicken = game.add.sprite(100, 100, 'chickens');
-            chicken.animations.add('white_down', [0,1,2,1], 13, true);
-            chicken.animations.add('white_up', [36,37,38,37], 13, true);
-            chicken.animations.add('white_left', [12,13,14,13], 13, true);
-            chicken.animations.add('white_right', [24,25,26,25], 13, true);
-            
+            chicken.animations.add('white_down', [0, 1, 2, 1], 13, true);
+            chicken.animations.add('white_up', [36, 37, 38, 37], 13, true);
+            chicken.animations.add('white_left', [12, 13, 14, 13], 13, true);
+            chicken.animations.add('white_right', [24, 25, 26, 25], 13, true);
+
             snakeHead = game.add.sprite(400, 300, 'segments', 0);
             snakeHead.anchor.setTo(0.5, 0.5);
             game.physics.enable(snakeHead, Phaser.Physics.ARCADE);
-            
+
             //  Init snakeSection array
-            for (var i = 1; i <= numSnakeSections-1; i++)
-            {
+            for (var i = 1; i <= numSnakeSections - 1; i++) {
                 snakeSection[i] = game.add.sprite(400, 300, 'segments', 1);
 
                 snakeSection[i].anchor.setTo(0.5, 0.5);
                 //snakeSection[i].frame(2);
             }
-            
+
             //  Init snakePath array
-            for (var i = 0; i <= numSnakeSections * snakeSpacer; i++)
-            {
+            for (var i = 0; i <= numSnakeSections * snakeSpacer; i++) {
                 snakePath[i] = new Phaser.Point(400, 300);
             }
 
-            
-            
+
+
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
-            chicken.anchor.setTo(0.5, 0.5 );
-            
+            chicken.anchor.setTo(0.5, 0.5);
+
             // Turn on the arcade physics engine for this sprite.
             game.physics.p2.enable(chicken, false);
             chicken.body.setCircle(20);
@@ -109,60 +97,63 @@ GameStates.makeGame = function( game, shared ) {
             chicken.body.setCollisionGroup(chickenCollisionGroup);
 
             chicken.body.collides(eggCollisionGroup, this.hitEgg, this);
-            
+
             mouse = game.add.sprite(100, 100, 'ball');
             game.physics.p2.enable(mouse, true);
             mouse.body.static = true;
             mouse.body.setCircle(10);
             mouse.body.data.shapes[0].sensor = true;
-            
+
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
             var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-            var text = game.add.text( game.world.centerX, 15, ("Score: " + score.toString()), style );
-            text.anchor.setTo( 0.5, 0.0 );
-            
+            var text = game.add.text(game.world.centerX, 15, ("Score: " + score.toString()), style);
+            text.anchor.setTo(0.5, 0.0);
+
             // When you click on the sprite, you go back to the MainMenu.
             line = new Phaser.Line(chicken.x, chicken.y, mouse.x, mouse.y);
 
             game.input.onDown.add(this.click, this);
             game.input.onUp.add(this.release, this);
             game.input.addMoveCallback(this.move, this);
-            
+
             cursors = this.input.keyboard.createCursorKeys();
             space = game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
             //game.input.keyboard.onUpCallback = function (e) {
-                // These can be checked against Phaser.Keyboard.UP, for example.
+            // These can be checked against Phaser.Keyboard.UP, for example.
             //    chicken.body.velocity.x = 0;
             //    chicken.body.velocity.y = 0;
             //    chicken.animations.stop();
             //};
         },
 
-        hitEgg: function (ch, eg) {
-            eg.destroy();
+        hitEgg: function (chicken, eggg) {
+            eggg.destroy();
+            hasDead = true;
             this.bumpScore();
             this.spawnEgg();
+            console.log('hit');
         },
 
         bumpScore: function () {
             this.score = this.score + 1;
+            console.log('score');
         },
 
         spawnEgg: function () {
-                egg = eggGroup.create(this.game.world.randomX, this.game.world.randomY, 'egg');
-                egg.body.clearShapes();
-                egg.body.loadPolygon('physics', 'egg');
-                egg.setScaleMinMax(0.5);
+            var egg = eggGroup.getFirstDead(true, this.game.world.randomX, this.game.world.randomY, 'egg');
+            egg.body.clearShapes();
+            egg.body.loadPolygon('physics', 'egg');
+            egg.setScaleMinMax(0.2);
 
-                //  Tell the panda to use the pandaCollisionGroup 
-                egg.body.setCollisionGroup(eggCollisionGroup);
+            //  Tell the panda to use the pandaCollisionGroup 
+            egg.body.setCollisionGroup(eggCollisionGroup);
 
-                //  Pandas will collide against themselves and the player
-                //  If you don't set this they'll not collide with anything.
-                //  The first parameter is either an array or a single collision group.
-                egg.body.collides([eggCollisionGroup, chickenCollisionGroup]);
-            
+            //  Pandas will collide against themselves and the player
+            //  If you don't set this they'll not collide with anything.
+            //  The first parameter is either an array or a single collision group.
+            egg.body.collides(chickenCollisionGroup);
+
             /*egg = game.add.sprite(Math.random() % game.world.width, Math.random() % game.world.height, 'egg');
             
             this.game.physics.p2.enable(egg, false);
@@ -172,7 +163,7 @@ GameStates.makeGame = function( game, shared ) {
             egg.body.setCollisionGroup(eggCollisionGroup);
             egg.body.collides(chickenCollisionGroup);*/
         },
-    
+
         click: function (pointer) {
 
             //var bodies = game.physics.p2.hitTest(pointer.position, [ chicken.body ]);
@@ -180,20 +171,20 @@ GameStates.makeGame = function( game, shared ) {
 
             //if (bodies.length)
             //{
-                //  Attach to the first body the mouse hit
-                mouseSpring = game.physics.p2.createSpring(mouse, bodies, 0, 30, 1);
-                line.setTo(chicken.x, chicken.y, mouse.x, mouse.y);
-                drawLine = true;
+            //  Attach to the first body the mouse hit
+            mouseSpring = game.physics.p2.createSpring(mouse, bodies, 0, 30, 1);
+            line.setTo(chicken.x, chicken.y, mouse.x, mouse.y);
+            drawLine = true;
             //}
 
         },
-        
+
         release: function () {
             drawLine = false;
             game.physics.p2.removeSpring(mouseSpring);
 
-            
-            
+
+
         },
 
         move: function (pointer, x, y, isDown) {
@@ -203,11 +194,10 @@ GameStates.makeGame = function( game, shared ) {
             line.setTo(chicken.x, chicken.y, mouse.x, mouse.y);
 
         },
-        
+
         preRender: function () {
 
-            if (line)
-            {
+            if (line) {
                 line.setTo(chicken.x, chicken.y, mouse.x, mouse.y);
             }
 
@@ -218,28 +208,28 @@ GameStates.makeGame = function( game, shared ) {
             if (drawLine) {
                 game.debug.geom(line, 'red');
             }
-           else{
+            else {
                 game.debug.geom(line, 'green');
-           }
+            }
 
         },
-        
+
         update: function () {
-    
+
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
-            
+
             // Accelerate the 'logo' sprite towards the cursor,
             // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
             // in X or Y.
             // This function returns the rotation angle that makes it visually match its
             // new trajectory.
-            
+
 
             snakeHead.body.velocity.setTo(0, 0);
             snakeHead.body.angularVelocity = 0;
 
-            snakeHead.rotation = game.physics.arcade.angleToXY( snakeHead, chicken.x, chicken.y );
-            
+            snakeHead.rotation = game.physics.arcade.angleToXY(snakeHead, chicken.x, chicken.y);
+
             snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 100));
 
             // Everytime the snake head moves, insert the new location at the start of the array, 
@@ -251,10 +241,13 @@ GameStates.makeGame = function( game, shared ) {
 
             snakePath.unshift(part);
 
-            for (var i = 1; i <= numSnakeSections - 1; i++)
-            {
+            for (var i = 1; i <= numSnakeSections - 1; i++) {
                 snakeSection[i].x = (snakePath[i * snakeSpacer]).x;
                 snakeSection[i].y = (snakePath[i * snakeSpacer]).y;
+            }
+
+            if (space.isDown) {
+                this.quitGame();
             }
 
             /*if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR))
@@ -282,6 +275,6 @@ GameStates.makeGame = function( game, shared ) {
                 chicken.animations.play('white_down');
             }*/
         }
-        
+
     };
 };
