@@ -26,6 +26,7 @@ GameStates.makePreloader = function( game ) {
             game.load.image('titlePage', 'assets/title.jpg');
             game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
             game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
+            game.load.audio('levelMusic', 'assets/fight.wav');
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
             game.load.spritesheet( 'segments', 'assets/segments.png', 16, 16);
@@ -33,6 +34,8 @@ GameStates.makePreloader = function( game ) {
             game.load.image('ball', 'assets/bullet.png');
             game.load.image('egg2', 'assets/egg2.png');
             game.load.physics('physics2', 'assets/Physics2.json');
+            game.load.audio('hurt', 'assets/Hit_Hurt.wav');
+            game.load.audio('blip', 'assets/Blip_Select.wav');
         },
     
         create: function () {

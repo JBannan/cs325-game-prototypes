@@ -23,6 +23,9 @@ GameStates.makeGame = function (game, shared) {
     var snakeCollisionGroup;
     var style;
     var text;
+    var lives = 10;
+    var music; 
+    var hurt, blip;
     //var eggGroup;
 
     function quitGame() {
@@ -32,6 +35,8 @@ GameStates.makeGame = function (game, shared) {
 
         //  Then let's go back to the main menu.
         score = 0;
+        lives = 10;
+        music.stop();
         game.state.start('MainMenu');
 
     }
@@ -39,6 +44,12 @@ GameStates.makeGame = function (game, shared) {
     return {
 
         create: function () {
+
+            music = game.add.audio('levelMusic');
+            hurt = game.add.audio('hurt');
+            blip = game.add.audio('blip');
+            music.loop = true;
+            music.play();
 
             game.world.setBounds(0, 0, 800, 600);
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
@@ -76,8 +87,10 @@ GameStates.makeGame = function (game, shared) {
             game.physics.p2.enable(snakeHead, false);
             snakeHead.body.setCircle(8);
             snakeHead.body.setCollisionGroup(snakeCollisionGroup);
+            snakeHead.body.damping = 0.5;
 
             snakeHead.body.collides(eggCollisionGroup, this.snakeEgg, this);
+            snakeHead.body.collides(chickenCollisionGroup, this.snakeChicken, this);
 
             //  Init snakeSection array
             for (var i = 1; i <= numSnakeSections - 1; i++) {
@@ -104,7 +117,9 @@ GameStates.makeGame = function (game, shared) {
             chicken.body.fixedRotation = true;
             chicken.body.setCollisionGroup(chickenCollisionGroup);
 
+            chicken.body.collides(snakeCollisionGroup);
             chicken.body.collides(eggCollisionGroup, this.hitEgg, this);
+            
 
             chicken.body.damping = 0.5;
 
@@ -141,6 +156,7 @@ GameStates.makeGame = function (game, shared) {
             egg.destroy();
             hasDead = true;
             this.bumpScore();
+            blip.play();
             this.spawnEgg();
             console.log('hit');
         },
@@ -152,13 +168,14 @@ GameStates.makeGame = function (game, shared) {
 
         snakeEgg: function () {
             egg.destroy();
+            hurt.play();
             this.decScore();
             this.spawnEgg();
         },
 
         snakeChicken: function () {
-            this.decScore();
-            this.decScore();
+            lives = lives - 1;
+            hurt.play();
         },
 
         decScore: function () {
@@ -253,6 +270,9 @@ GameStates.makeGame = function (game, shared) {
 
             // Everytime the snake head moves, insert the new location at the start of the array, 
             // and knock the last position off the end
+            if (lives < 0) {
+                quitGame();
+            }
 
             this.accelerateToObject(snakeHead, egg, score * 2);
 
