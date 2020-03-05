@@ -31,8 +31,8 @@ GameStates.makePreloader = function( game ) {
             game.load.spritesheet( 'segments', 'assets/segments.png', 16, 16);
             game.load.spritesheet( 'chickens', 'assets/jODGJn4-1.png', 48, 48);
             game.load.image('ball', 'assets/bullet.png');
-            game.load.image('egg', 'assets/egg.png');
-            game.load.physics('physics', 'assets/Physics.json');
+            game.load.image('egg2', 'assets/egg2.png');
+            game.load.physics('physics2', 'assets/Physics2.json');
         },
     
         create: function () {

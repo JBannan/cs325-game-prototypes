@@ -16,7 +16,7 @@ GameStates.makeGame = function (game, shared) {
     var numSnakeSections = 20; //number of snake body sections
     var snakeSpacer = 6; //parameter that sets the spacing between sections
     var hasDead = false;
-    //var space;
+    var space;
     var egg;
     var chickenCollisionGroup;
     var eggCollisionGroup;
@@ -30,6 +30,7 @@ GameStates.makeGame = function (game, shared) {
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
         //  Then let's go back to the main menu.
+        score = 0;
         game.state.start('MainMenu');
 
     }
@@ -98,6 +99,8 @@ GameStates.makeGame = function (game, shared) {
 
             chicken.body.collides(eggCollisionGroup, this.hitEgg, this);
 
+            chicken.body.damping = 0.5;
+
             mouse = game.add.sprite(100, 100, 'ball');
             game.physics.p2.enable(mouse, true);
             mouse.body.static = true;
@@ -118,7 +121,7 @@ GameStates.makeGame = function (game, shared) {
             game.input.addMoveCallback(this.move, this);
 
             cursors = this.input.keyboard.createCursorKeys();
-            //space = game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
+            space = game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
             //game.input.keyboard.onUpCallback = function (e) {
             // These can be checked against Phaser.Keyboard.UP, for example.
             //    chicken.body.velocity.x = 0;
@@ -141,29 +144,26 @@ GameStates.makeGame = function (game, shared) {
             console.log('score');
         },
 
+        decScore: function () {
+            score = score - 1;
+            text.setText("Score: " + score);
+        },
+
         spawnEgg: function () {
-            egg = game.add.sprite(this.game.world.randomX, this.game.world.randomY, 'egg');
+            egg = game.add.sprite(this.game.world.randomX, this.game.world.randomY, 'egg2');
             game.physics.p2.enable(egg, false);
             egg.body.clearShapes();
-            egg.body.loadPolygon('physics', 'egg');
-            egg.setScaleMinMax(0.2);
+            egg.body.loadPolygon('physics2', 'egg2');
             egg.body.fixedRotation = true;
-            //  Tell the panda to use the pandaCollisionGroup 
+            egg.body.velocity.x = 0;
+            egg.body.velocity.y = 0;
+            //  Tell the egg to use the eggCollisionGroup 
             egg.body.setCollisionGroup(eggCollisionGroup);
 
-            //  Pandas will collide against themselves and the player
+            //  eggs will collide against the player
             //  If you don't set this they'll not collide with anything.
             //  The first parameter is either an array or a single collision group.
             egg.body.collides(chickenCollisionGroup);
-
-            /*egg = game.add.sprite(Math.random() % game.world.width, Math.random() % game.world.height, 'egg');
-            
-            this.game.physics.p2.enable(egg, false);
-            egg.body.clearShapes();
-            egg.body.loadPolygon("physics", "egg");
-            egg.setScaleMinMax(0.5);
-            egg.body.setCollisionGroup(eggCollisionGroup);
-            egg.body.collides(chickenCollisionGroup);*/
         },
 
         click: function (pointer) {
