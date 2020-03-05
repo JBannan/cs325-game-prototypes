@@ -93,7 +93,8 @@ GameStates.makeGame = function (game, shared) {
             chicken.anchor.setTo(0.5, 0.5);
             // Turn on the arcade physics engine for this sprite.
             game.physics.p2.enable(chicken, false);
-            chicken.body.setCircle(25);
+            chicken.body.clearShapes();
+            chicken.body.setPolygon('physics', 'chicken');
             chicken.body.fixedRotation = true;
             chicken.body.setCollisionGroup(chickenCollisionGroup);
 
