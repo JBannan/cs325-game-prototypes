@@ -20,6 +20,7 @@ GameStates.makeGame = function (game, shared) {
     var egg;
     var chickenCollisionGroup;
     var eggCollisionGroup;
+    var snakeCollisionGroup;
     var style;
     var text;
     //var eggGroup;
@@ -43,13 +44,14 @@ GameStates.makeGame = function (game, shared) {
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             game.physics.startSystem(Phaser.Physics.ARCADE);
             game.physics.startSystem(Phaser.Physics.P2JS);
-            game.physics.p2.gravity.y = 100;
+            game.physics.p2.gravity.y = 0;
             game.physics.p2.setImpactEvents(true);
             game.physics.p2.restitution = 0.8;
 
             //  Create our collision groups. One for the player, one for the pandas
             chickenCollisionGroup = game.physics.p2.createCollisionGroup();
             eggCollisionGroup = game.physics.p2.createCollisionGroup();
+            snakeCollisionGroup = game.physics.p2.createCollisionGroup();
 
             //  This part is vital if you want the objects with their own collision groups to still collide with the world bounds
             //  (which we do) - what this does is adjust the bounds to use its own collision group.
@@ -71,7 +73,11 @@ GameStates.makeGame = function (game, shared) {
 
             snakeHead = game.add.sprite(400, 300, 'segments', 0);
             snakeHead.anchor.setTo(0.5, 0.5);
-            game.physics.enable(snakeHead, Phaser.Physics.ARCADE);
+            game.physics.p2.enable(snakeHead, false);
+            snakeHead.body.setCircle(8);
+            snakeHead.body.setCollisionGroup(snakeCollisionGroup);
+
+            snakeHead.body.collides(eggCollisionGroup, this.snakeEgg, this);
 
             //  Init snakeSection array
             for (var i = 1; i <= numSnakeSections - 1; i++) {
@@ -142,11 +148,21 @@ GameStates.makeGame = function (game, shared) {
         bumpScore: function () {
             score = score + 1;
             text.setText("Score: " + score);
-            console.log('score');
+        },
+
+        snakeEgg: function () {
+            egg.destroy();
+            this.decScore();
+            this.spawnEgg();
+        },
+
+        snakeChicken: function () {
+            this.decScore();
+            this.decScore();
         },
 
         decScore: function () {
-            score = score - 1;
+            score = score - 5;
             text.setText("Score: " + score);
         },
 
@@ -156,15 +172,15 @@ GameStates.makeGame = function (game, shared) {
             egg.body.clearShapes();
             egg.body.loadPolygon('physics2', 'egg2');
             egg.body.fixedRotation = true;
-            egg.body.velocity.x = 0;
-            egg.body.velocity.y = 0;
+            egg.body.velocity.x = Math.random();
+            egg.body.velocity.y = Math.random();
             //  Tell the egg to use the eggCollisionGroup 
             egg.body.setCollisionGroup(eggCollisionGroup);
 
             //  eggs will collide against the player
             //  If you don't set this they'll not collide with anything.
             //  The first parameter is either an array or a single collision group.
-            egg.body.collides(chickenCollisionGroup);
+            egg.body.collides([chickenCollisionGroup, snakeCollisionGroup]);
         },
 
         click: function (pointer) {
@@ -228,15 +244,17 @@ GameStates.makeGame = function (game, shared) {
             // new trajectory.
 
 
-            snakeHead.body.velocity.setTo(0, 0);
-            snakeHead.body.angularVelocity = 0;
+            //snakeHead.body.velocity.setTo(0, 0);
+            //snakeHead.body.angularVelocity = 0;
 
-            snakeHead.rotation = game.physics.arcade.angleToXY(snakeHead, chicken.x, chicken.y);
+            //snakeHead.rotation = game.physics.arcade.angleToXY(snakeHead, chicken.x, chicken.y);
 
-            snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, 100));
+            //snakeHead.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(snakeHead.angle, (score + 50)));
 
             // Everytime the snake head moves, insert the new location at the start of the array, 
             // and knock the last position off the end
+
+            this.accelerateToObject(snakeHead, egg, score * 2);
 
             var part = snakePath.pop();
 
@@ -272,6 +290,14 @@ GameStates.makeGame = function (game, shared) {
                 chicken.body.velocity.y = 200;
                 chicken.animations.play('white_down');
             }*/
+        },
+
+        accelerateToObject: function (obj1, obj2, speed) {
+            if (typeof speed === 'undefined') { speed = 60; }
+            var angle = Math.atan2(obj2.y - obj1.y, obj2.x - obj1.x);
+            obj1.body.rotation = angle + game.math.degToRad(90);  // correct angle of angry bullets (depends on the sprite used)
+            obj1.body.force.x = Math.cos(angle) * speed;    // accelerateToObject 
+            obj1.body.force.y = Math.sin(angle) * speed;
         }
 
     };
