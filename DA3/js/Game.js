@@ -2,7 +2,7 @@
 
 GameStates.makeGame = function (game, shared) {
     // Create your own variables.
-    var bouncy = null;
+    
     var chicken = null;
     var cursors = null;
     var score = 0;
@@ -16,11 +16,13 @@ GameStates.makeGame = function (game, shared) {
     var numSnakeSections = 20; //number of snake body sections
     var snakeSpacer = 6; //parameter that sets the spacing between sections
     var hasDead = false;
-    var space;
+    //var space;
     var egg;
     var chickenCollisionGroup;
     var eggCollisionGroup;
-    var eggGroup;
+    var style;
+    var text;
+    //var eggGroup;
 
     function quitGame() {
 
@@ -52,16 +54,15 @@ GameStates.makeGame = function (game, shared) {
             //  (which we do) - what this does is adjust the bounds to use its own collision group.
             game.physics.p2.updateBoundsCollisionGroup();
 
-            eggGroup = game.add.group();
-            eggGroup.enableBody = true;
-            eggGroup.physicsBodyType = Phaser.Physics.P2JS;
+            //eggGroup = game.add.group();
+            //eggGroup.enableBody = true;
+            //eggGroup.physicsBodyType = Phaser.Physics.P2JS;
 
             this.spawnEgg();
 
-            //this.spawnEgg();
-
             // Create a sprite at the center of the screen using the 'logo' image.
             chicken = game.add.sprite(100, 100, 'chickens');
+            chicken.setScaleMinMax(1.5);
             chicken.animations.add('white_down', [0, 1, 2, 1], 13, true);
             chicken.animations.add('white_up', [36, 37, 38, 37], 13, true);
             chicken.animations.add('white_left', [12, 13, 14, 13], 13, true);
@@ -89,10 +90,9 @@ GameStates.makeGame = function (game, shared) {
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
             chicken.anchor.setTo(0.5, 0.5);
-
             // Turn on the arcade physics engine for this sprite.
             game.physics.p2.enable(chicken, false);
-            chicken.body.setCircle(20);
+            chicken.body.setCircle(25);
             chicken.body.fixedRotation = true;
             chicken.body.setCollisionGroup(chickenCollisionGroup);
 
@@ -106,8 +106,8 @@ GameStates.makeGame = function (game, shared) {
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
-            var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-            var text = game.add.text(game.world.centerX, 15, ("Score: " + score.toString()), style);
+            style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
+            text = game.add.text(game.world.centerX, 15, ("Score: " + score.toString()), style);
             text.anchor.setTo(0.5, 0.0);
 
             // When you click on the sprite, you go back to the MainMenu.
@@ -118,7 +118,7 @@ GameStates.makeGame = function (game, shared) {
             game.input.addMoveCallback(this.move, this);
 
             cursors = this.input.keyboard.createCursorKeys();
-            space = game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
+            //space = game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
             //game.input.keyboard.onUpCallback = function (e) {
             // These can be checked against Phaser.Keyboard.UP, for example.
             //    chicken.body.velocity.x = 0;
@@ -127,8 +127,8 @@ GameStates.makeGame = function (game, shared) {
             //};
         },
 
-        hitEgg: function (chicken, eggg) {
-            eggg.destroy();
+        hitEgg: function () {
+            egg.destroy();
             hasDead = true;
             this.bumpScore();
             this.spawnEgg();
@@ -136,16 +136,18 @@ GameStates.makeGame = function (game, shared) {
         },
 
         bumpScore: function () {
-            this.score = this.score + 1;
+            score = score + 1;
+            text.setText("Score: " + score);
             console.log('score');
         },
 
         spawnEgg: function () {
-            var egg = eggGroup.getFirstDead(true, this.game.world.randomX, this.game.world.randomY, 'egg');
+            egg = game.add.sprite(this.game.world.randomX, this.game.world.randomY, 'egg');
+            game.physics.p2.enable(egg, false);
             egg.body.clearShapes();
             egg.body.loadPolygon('physics', 'egg');
             egg.setScaleMinMax(0.2);
-
+            egg.body.fixedRotation = true;
             //  Tell the panda to use the pandaCollisionGroup 
             egg.body.setCollisionGroup(eggCollisionGroup);
 
@@ -246,17 +248,12 @@ GameStates.makeGame = function (game, shared) {
                 snakeSection[i].y = (snakePath[i * snakeSpacer]).y;
             }
 
-            if (space.isDown) {
-                this.quitGame();
-            }
-
-            /*if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR))
+            if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR))
             {
-                chicken.body.velocity.x *= 2;
-                chicken.body.velocity.y *= 2;
+                quitGame();
             }
 
-            
+            /*
             if (cursors.left.isDown) {
                 chicken.body.velocity.x = -200;
                 chicken.animations.play('white_left');
