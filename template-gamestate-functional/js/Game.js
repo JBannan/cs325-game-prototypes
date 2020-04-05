@@ -4,6 +4,8 @@ GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
     var bouncy = null;
     
+
+    
     function quitGame() {
 
         //  Here you should destroy anything you no longer need.

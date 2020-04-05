@@ -28,6 +28,11 @@ GameStates.makePreloader = function( game ) {
             game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
+            game.load.image('CityFire', 'assets/Skyline_flames.png');
+            game.load.image('startButton', 'assets/StartButton.png');
+            game.load.image('optionsButton', 'assets/OptionsButton.png');
+            game.load.image('bigBG', 'assets/Big_Silo.png');
+
         },
     
         create: function () {
