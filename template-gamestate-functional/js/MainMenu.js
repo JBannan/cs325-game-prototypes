@@ -28,7 +28,7 @@ GameStates.makeMainMenu = function( game, shared ) {
     
             game.add.sprite(0, 0, 'CityFire');
     
-            playButton = game.add.button( 303, 400, 'playButton', startGame, null, 'over', 'out', 'down');
+            playButton = game.add.button( 303, 400, 'startButton', startGame);
     
         },
     

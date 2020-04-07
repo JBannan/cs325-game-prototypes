@@ -3,7 +3,7 @@
 GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
     var bouncy = null;
-    
+    var camera = null;
 
     
     function quitGame() {
@@ -20,6 +20,11 @@ GameStates.makeGame = function( game, shared ) {
     
         create: function () {
     
+            // Fit 1600x1200 BG image
+            game.world.setBounds(0,0,1600,1200);
+            game.add.sprite(0,0, 'bigBG');
+            game.camera.setPosition(0, 600);
+
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             
             // Create a sprite at the center of the screen using the 'logo' image.
@@ -53,7 +58,13 @@ GameStates.makeGame = function( game, shared ) {
             // in X or Y.
             // This function returns the rotation angle that makes it visually match its
             // new trajectory.
-            bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
+            // bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
+        },
+
+        render: function () {
+
+            game.debug.cameraInfo(game.camera, 32, 32);
+
         }
     };
 };
