@@ -32,6 +32,7 @@ GameStates.makePreloader = function( game ) {
             game.load.image('startButton', 'assets/StartButton.png');
             game.load.image('optionsButton', 'assets/OptionsButton.png');
             game.load.image('bigBG', 'assets/Big_Silo.png');
+            game.load.spritesheet( 'segments', 'assets/segments.png', 16, 32);
 
         },
     

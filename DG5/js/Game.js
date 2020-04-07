@@ -2,9 +2,8 @@
 
 GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
-    var bouncy = null;
-    var camera = null;
-
+    var player = null;
+    var cursors = null;
     
     function quitGame() {
 
@@ -22,22 +21,25 @@ GameStates.makeGame = function( game, shared ) {
     
             // Fit 1600x1200 BG image
             game.world.setBounds(0,0,1600,1200);
-            game.add.sprite(0,0, 'bigBG');
+            game.add.tileSprite(0,0, 1600, 1200, 'bigBG');
             game.camera.setPosition(0, 600);
 
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             
             // Create a sprite at the center of the screen using the 'logo' image.
-            bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
+            //bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
-            bouncy.anchor.setTo( 0.5, 0.5 );
+            //bouncy.anchor.setTo( 0.5, 0.5 );
+
+            player = game.add.sprite( 60, game.world.height - 45, 'segments', 0);
+            player.anchor.setTo(0.5, 0.5);
             
             // Turn on the arcade physics engine for this sprite.
-            game.physics.enable( bouncy, Phaser.Physics.ARCADE );
+            game.physics.enable( player, Phaser.Physics.ARCADE );
             // Make it bounce off of the world bounds.
-            bouncy.body.collideWorldBounds = true;
-            
+            player.body.collideWorldBounds = true;
+
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
             var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
@@ -45,8 +47,14 @@ GameStates.makeGame = function( game, shared ) {
             text.anchor.setTo( 0.5, 0.0 );
             
             // When you click on the sprite, you go back to the MainMenu.
-            bouncy.inputEnabled = true;
-            bouncy.events.onInputDown.add( function() { quitGame(); }, this );
+            //bouncy.inputEnabled = true;
+            //bouncy.events.onInputDown.add( function() { quitGame(); }, this );
+
+            game.camera.follow(player);
+
+            game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
+
+            cursors = game.input.keyboard.createCursorKeys();
         },
     
         update: function () {
@@ -59,6 +67,26 @@ GameStates.makeGame = function( game, shared ) {
             // This function returns the rotation angle that makes it visually match its
             // new trajectory.
             // bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
+
+            if (cursors.up.isDown) {
+                player.body.velocity.y = -200;
+            }
+            else if (cursors.down.isDown) {
+                player.body.velocity.y = 200;
+            }
+            else {
+                player.body.velocity.y = 0;
+            }
+
+            if (cursors.right.isDown) {
+                player.body.velocity.x = 200;
+            }
+            else if (cursors.left.isDown) {
+                player.body.velocity.x = -200;
+            }
+            else {
+                player.body.velocity.x = 0;
+            }
         },
 
         render: function () {
