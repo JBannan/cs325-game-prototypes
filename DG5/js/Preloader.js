@@ -34,6 +34,7 @@ GameStates.makePreloader = function( game ) {
             game.load.image('bigBG', 'assets/Big_Silo.png');
             game.load.spritesheet( 'segments', 'assets/segments.png', 16, 32);
             game.load.image('tiles', 'assets/scifi_platformTiles_16x16.png');
+            game.load.tilemap('map', 'assets/map1.json', null, Phaser.Tilemap.TILED_JSON);
 
         },
     
