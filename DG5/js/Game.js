@@ -24,6 +24,10 @@ GameStates.makeGame = function( game, shared ) {
             game.add.tileSprite(0,0, 1600, 1200, 'bigBG');
             game.camera.setPosition(0, 600);
 
+            
+            
+            game.physics.startSystem(Phaser.Physics.ARCADE);
+
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             
             // Create a sprite at the center of the screen using the 'logo' image.
@@ -32,13 +36,14 @@ GameStates.makeGame = function( game, shared ) {
             // so it will be truly centered.
             //bouncy.anchor.setTo( 0.5, 0.5 );
 
-            player = game.add.sprite( 60, game.world.height - 45, 'segments', 0);
+            player = game.add.sprite( 60, game.world.height - 45, 'segments', 1);
             player.anchor.setTo(0.5, 0.5);
             
             // Turn on the arcade physics engine for this sprite.
             game.physics.enable( player, Phaser.Physics.ARCADE );
             // Make it bounce off of the world bounds.
             player.body.collideWorldBounds = true;
+            player.body.gravity.y = 200;
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
@@ -68,15 +73,15 @@ GameStates.makeGame = function( game, shared ) {
             // new trajectory.
             // bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
 
-            if (cursors.up.isDown) {
-                player.body.velocity.y = -200;
+            if (game.input.keyboard.justPressed(Phaser.Keyboard.UP) && player.body.touching.down) {
+                player.body.velocity.y = -550;
             }
-            else if (cursors.down.isDown) {
-                player.body.velocity.y = 200;
+            /*else if (cursors.down.isDown) {
+                player.body.velocity.y = 500;
             }
             else {
                 player.body.velocity.y = 0;
-            }
+            }*/
 
             if (cursors.right.isDown) {
                 player.body.velocity.x = 200;
