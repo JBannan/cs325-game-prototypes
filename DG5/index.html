@@ -41,7 +41,9 @@ The game uses a tilemap to build the level and directly translates the tiles the
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-My original plan was to use P2 physics so that I could shoot a projectile at a platform and then connect the player (via their weapon) and the platform where it was shot with a spring with no springiness. 
+My original plan was to use P2 physics so that I could shoot a projectile at a platform and then connect the player (via their weapon) and the platform where it was shot with a spring with no springiness. This was completely scrapped when I found out that phaser weapons would never use anything but Arcade physics. These different physics systems would never interact so any bullet/platform interaction is impossible.
+I also considered using box2d that looked like it had weapon/rope/platform physics that i wanted to implement, but came at a price over $0, too much for me. Having never gotten past the weapon system, the rest of the game (more level/enemies/score) has not yet been implemented.
+Additionally, Recoil was also bugged, always accelerating the player in the (same) wrong direction or not doing anything. 
 </li>
 
 <li><strong>Prototype Assets:</strong>
@@ -71,11 +73,11 @@ N/A
 </li>
 
 <li><strong>Mandated Variety:</strong>
-State which input, randomness, genre, and play style you used in this prototype.
+N/A
 </li>
 
 <li><strong>Prototype Goal:</strong>
-What game mechanic is this prototype evaluating?
+Implement Tilemaps to speed up level design. Use Recoil as a movement function.
 </li>
 
 <li><strong>Player Experience Goals:</strong>
@@ -83,24 +85,23 @@ What experience do you want players to have when playing your game?
 </li>
 
 <li><strong>Gameplay:</strong>
-A paragraph describing the actions the player can perform, the system dynamics, and the core mechanic. Include a concise explanation of the prototype’s inputs and their expected effects (how to play). You can also describe game play that is not in the prototype. You may include mock-up images for parts of the game not in the prototype.
+The player can use W/A/D to Jump/Move Left/Move Right. The spacebar will fire the player's weapon downwards and accelerate the player upwards.
 </li>
 
 <li><strong>Strategies:</strong>
-What player strategies do you expect will be effective at playing this game?
+Currently, the player can just spam fire and essentially have a jetpack to move around with.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, mention it here. If the game is abstract, then say so.
-How will the dramatic tension interact with the gameplay tension?
+N/a
 </li>
 
 <li><strong>Target Audience:</strong>
-A single sentence that describes the demographic you're trying to reach.
+Players of platformer games.
 </li>
 
 <li><strong>Play Time:</strong>
-How long does your game take to play?
+The game only has enough content for ~1 minute or things to play around with.
 </li>
 
 </ul>
