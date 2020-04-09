@@ -7,7 +7,7 @@ GameStates.makeGame = function( game, shared ) {
     var platformGroup = null;
     var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null;
-    var weapon = null, shot, fireButton, bulletGroup;
+    var nextFire = 0, fireButton, bulletGroup, fireRate = 100;
     var map;
     var layer;
     var tiles, tileGroup;
@@ -91,20 +91,13 @@ GameStates.makeGame = function( game, shared ) {
             player.body.damping = 0.1;
 
             bulletGroup = game.add.group();
-            //bulletGroup.enableBodyDebug = true;
-
             bulletGroup.enableBody = true;
             bulletGroup.physicsBodyType = Phaser.Physics.P2JS;
-            weapon = game.add.weapon(1, 'bullet', null, bulletGroup);
-            //weapon.bullets.enableBody = true;
-            //weapon.bullets.physicsBodyType = Phaser.Physics.P2JS;
-            weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
-            weapon.bulletSpeed = 650;
-            weapon.bulletGravity.y = 600;
-            game.physics.p2.enable(weapon.bullets);
-            weapon.bullets.setAll('body.setRectangleFromSprite');
-            //bulletCollisionGroup = game.physics.p2.createCollisionGroup(bulletGroup);
-            weapon.trackSprite(player, 0, 0);
+            bulletGroup.create(2, 'bullet', null, false);
+            bulletGroup.setAll('anchor.x', 0.5);
+            bulletGroup.setAll('anchor.y', 0.5);
+            bulletGroup.setAll('outOfBoundsKill', true);
+            bulletGroup.setAll('checkWorldBounds', true);
 
 
             
@@ -133,6 +126,18 @@ GameStates.makeGame = function( game, shared ) {
 
             cursors = game.input.keyboard.createCursorKeys();
             fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+        },
+
+        shoot: function () {
+            if (game.time.now > nextFire && bulletGroup.countDead() > 0) {
+                nextFire = game.time.now + this.fireRate;
+                var bullet = bulletGroup.getFirstExists(false);
+                bullet.reset(this.player.x + this.player.width / 2 * Math.cos(this.player.rotation - Phaser.Math.degToRad(90)),
+                  this.player.y + this.player.width / 2 * Math.sin(this.player.rotation - Phaser.Math.degToRad(90)));
+                bullet.body.rotation = this.player.rotation;
+                bullet.body.mass = 100;
+                bullet.body.moveForward(500);
+            }
         },
 
          /*createEnemies: function () {
@@ -165,15 +170,13 @@ GameStates.makeGame = function( game, shared ) {
 
             if (fireButton.isDown) {
                 
-                weapon.fireAtPointer();
+                this.shoot();
                 console.log("fire");
             }
             
         },
 
         render: function () {
-
-            weapon.debug();
             //game.debug.cameraInfo(game.camera, 32, 32);
 
         }
