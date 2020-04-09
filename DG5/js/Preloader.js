@@ -36,6 +36,8 @@ GameStates.makePreloader = function( game ) {
             game.load.image('tiles', 'assets/scifi_platformTiles_16x16.png');
             game.load.tilemap('map', 'assets/map2_1.csv', null, Phaser.Tilemap.CSV);
             game.load.image('bullet', 'assets/bullet.png');
+            game.load.audio('boom', 'assets/Explosion.wav');
+            game.load.audio('hop', 'assets/Jump.wav');
 
         },
     
