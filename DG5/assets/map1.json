@@ -34,8 +34,17 @@
  "tileheight":16,
  "tilesets":[
         {
+         "columns":35,
          "firstgid":1,
-         "source":"scifi_platformTiles_16x16.png"
+         "image":"scifi_platformTiles_16x16.png",
+         "imageheight":368,
+         "imagewidth":560,
+         "margin":0,
+         "name":"scifi_platformTiles_16x16",
+         "spacing":0,
+         "tilecount":805,
+         "tileheight":16,
+         "tilewidth":16
         }],
  "tilewidth":16,
  "type":"map",

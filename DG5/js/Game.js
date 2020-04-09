@@ -5,11 +5,15 @@ GameStates.makeGame = function( game, shared ) {
     var player = null;
     var cursors = null;
     var platformGroup = null;
+    var playerCollisionGroup = null;
+    var platformCollisionGroup = null;
+    var enemyCollisionGroup = null;
     var enemyGroup = null;
-    var weapon = null;
+    var weapon = null, shot, fireButton, bulletGroup;
     var map;
-    var layerCollide;
+    var layer;
     var layerBG;
+    var line, drawLine = false, mouse, mouseSpring;
     
     function quitGame() {
 
@@ -27,6 +31,7 @@ GameStates.makeGame = function( game, shared ) {
     return {
     
         create: function () {
+            
     
             // Fit 1600x1200 BG image
             game.world.setBounds(0,0,1600,1200);
@@ -40,24 +45,27 @@ GameStates.makeGame = function( game, shared ) {
             game.physics.p2.gravity.y = 0;
             game.physics.p2.setImpactEvents(true);
             game.physics.p2.defaultRestitution = 0.1;
+            game.physics.p2.gravity.y = 1200;
 
-            map = game.add.tilemap('map');
-            map.addTileSetImage('tiles');
+            map = game.add.tilemap('map',16,16);
+            map.addTilesetImage('tiles');
 
-            layerCollide = map.createLayer('Tile Layer 1');
+            layer = map.createLayer(0);
             //layerBG = map.createLayer('Tile Layer 2');
             
-            layerCollide.resizeWorld();
+            layer.resizeWorld();
 
-            map.setCollisionBetween(1, 467, true, layerCollide);
-            game.physics.p2.convertTilemap(map, layerCollide);
+            map.setCollisionBetween(1, 467);
+            game.physics.p2.convertTilemap(map, layer);
 
 
             // P2 Collision Groups
+            /*
             playerCollisionGroup = game.physics.p2.createCollisionGroup();
             enemyCollisionGroup = game.physics.p2.createCollisionGroup();
             platformCollisionGroup = game.physics.p2.createCollisionGroup();
             game.physics.p2.updateBoundsCollisionGroup();// Enable Bounds Collision
+            */
 
             // Enemy Section ---------------------------------------------------------------------------------------
             //enemyGroup = game.add.group();
@@ -67,25 +75,33 @@ GameStates.makeGame = function( game, shared ) {
 
 
             // Player Section --------------------------------------------------------------------------------------
-            player = game.add.sprite( 60, game.world.height - 45, 'segments', 1);
+            player = game.add.sprite( 60, game.world.height - 50, 'segments', 1);
             player.anchor.setTo(0.5, 0.5);
             game.physics.p2.enable(player);
-
+            game.physics.p2.setBoundsToWorld(true, true, true, true, false);
             player.body.setRectangleFromSprite();
             player.body.fixedRotation = true;
-            player.body.setCollisionGroup(playerCollisionGroup);
+            //player.body.setCollisionGroup(playerCollisionGroup);
             
             // What Player Collides With
-            player.body.collides(platformCollisionGroup);
-            player.body.collides(enemyCollisionGroup);
-
+            //player.body.collides(platformCollisionGroup);
+            //player.body.collides(enemyCollisionGroup);
             player.body.damping = 0.1;
 
-            // Turn on the arcade physics engine for this sprite.
-            //          game.physics.enable( player, Phaser.Physics.ARCADE );
-            // Make it bounce off of the world bounds in ARCADE.
-            //          player.body.collideWorldBounds = true;
-            //          player.body.gravity.y = 1380;
+            //bulletGroup = game.add.group();
+            //bulletGroup.enableBodyDebug = true;
+
+            //bulletGroup.enableBody = true;
+            //bulletGroup.physicsBodyType = Phaser.Physics.P2JS;
+            weapon = game.add.weapon(1, 'bullet', null, bulletGroup);
+            weapon.bullets.enableBody = true;
+            weapon.bullets.physicsBodyType = Phaser.Physics.P2JS;
+            weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
+            weapon.bulletSpeed = 650;
+            weapon.bulletGravity.y = 600;
+            game.physics.p2.enable(weapon.bullets);
+            weapon.bullets.setAll('body.setRectangleFromSprite')
+            weapon.trackSprite(player, 0, 0);
             // -----------------------------------------------------------------------------------------------------
 
             // Platform Section ------------------------------------------------------------------------------------
@@ -110,15 +126,12 @@ GameStates.makeGame = function( game, shared ) {
             game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
 
             cursors = game.input.keyboard.createCursorKeys();
+            fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
         },
 
          /*createEnemies: function () {
 
          },*/
-
-         canJump: function () {
-
-         },
     
         update: function () {
     
@@ -131,8 +144,8 @@ GameStates.makeGame = function( game, shared ) {
             // new trajectory.
             // bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
 
-            if (game.input.keyboard.justPressed(Phaser.Keyboard.UP) && canJump()) {
-                player.body.moveUp(250);
+            if (game.input.keyboard.justPressed(Phaser.Keyboard.UP)) {
+                player.body.moveUp(450);
             }
             if (cursors.right.isDown) {
                 player.body.moveRight(300);
@@ -143,10 +156,18 @@ GameStates.makeGame = function( game, shared ) {
             else {
                 player.body.velocity.x = 0;
             }
+
+            if (fireButton.isDown) {
+                
+                weapon.fireAtPointer();
+                console.log("fire");
+            }
+            
         },
 
         render: function () {
 
+            weapon.debug();
             //game.debug.cameraInfo(game.camera, 32, 32);
 
         }
