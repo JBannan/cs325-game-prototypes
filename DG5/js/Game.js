@@ -10,7 +10,7 @@ GameStates.makeGame = function( game, shared ) {
     var weapon = null, shot, fireButton, bulletGroup;
     var map;
     var layer;
-    var boom, hop;
+    var boom, hop, bgm;
     var tiles, tileGroup;
     var line, drawLine = false, mouse, mouseSpring;
     
@@ -39,6 +39,9 @@ GameStates.makeGame = function( game, shared ) {
 
             hop = game.add.audio('hop');
             boom = game.add.audio('boom');
+            //bgm = game.add.audio('intro');
+            //bgm.loop = true;
+            //bgm.play();
 
             
             // Initializing Physics System(s)

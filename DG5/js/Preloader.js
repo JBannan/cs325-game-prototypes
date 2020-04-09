@@ -38,6 +38,7 @@ GameStates.makePreloader = function( game ) {
             game.load.image('bullet', 'assets/bullet.png');
             game.load.audio('boom', 'assets/Explosion.wav');
             game.load.audio('hop', 'assets/Jump.wav');
+            //game.load.audio('intro', 'assets/01 Intro.mp3');
 
         },
     
