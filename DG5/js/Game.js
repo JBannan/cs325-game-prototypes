@@ -5,14 +5,12 @@ GameStates.makeGame = function( game, shared ) {
     var player = null;
     var cursors = null;
     var platformGroup = null;
-    var playerCollisionGroup = null;
-    var platformCollisionGroup = null;
-    var enemyCollisionGroup = null;
+    var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null;
     var weapon = null, shot, fireButton, bulletGroup;
     var map;
     var layer;
-    var layerBG;
+    var tiles, tileGroup;
     var line, drawLine = false, mouse, mouseSpring;
     
     function quitGame() {
@@ -56,16 +54,20 @@ GameStates.makeGame = function( game, shared ) {
             layer.resizeWorld();
 
             map.setCollisionBetween(1, 467);
-            game.physics.p2.convertTilemap(map, layer);
-
+            tiles = game.physics.p2.convertTilemap(map, layer);
+            console.log(map.collision);
+            //tileCollisionGroup = game.physics.p2.createCollisionGroup();
+            //tileGroup = game.add.group(game, null, 'tileGroup', false, true, Phaser.Physics.P2JS);
+            //tileGroup.addMultiple(tiles);
+            //console.log('added');
+            
 
             // P2 Collision Groups
-            /*
             playerCollisionGroup = game.physics.p2.createCollisionGroup();
             enemyCollisionGroup = game.physics.p2.createCollisionGroup();
             platformCollisionGroup = game.physics.p2.createCollisionGroup();
-            game.physics.p2.updateBoundsCollisionGroup();// Enable Bounds Collision
-            */
+            //game.physics.p2.updateBoundsCollisionGroup();// Enable Bounds Collision
+            
 
             // Enemy Section ---------------------------------------------------------------------------------------
             //enemyGroup = game.add.group();
@@ -88,20 +90,24 @@ GameStates.makeGame = function( game, shared ) {
             //player.body.collides(enemyCollisionGroup);
             player.body.damping = 0.1;
 
-            //bulletGroup = game.add.group();
+            bulletGroup = game.add.group();
             //bulletGroup.enableBodyDebug = true;
 
-            //bulletGroup.enableBody = true;
-            //bulletGroup.physicsBodyType = Phaser.Physics.P2JS;
+            bulletGroup.enableBody = true;
+            bulletGroup.physicsBodyType = Phaser.Physics.P2JS;
             weapon = game.add.weapon(1, 'bullet', null, bulletGroup);
-            weapon.bullets.enableBody = true;
-            weapon.bullets.physicsBodyType = Phaser.Physics.P2JS;
+            //weapon.bullets.enableBody = true;
+            //weapon.bullets.physicsBodyType = Phaser.Physics.P2JS;
             weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
             weapon.bulletSpeed = 650;
             weapon.bulletGravity.y = 600;
             game.physics.p2.enable(weapon.bullets);
-            weapon.bullets.setAll('body.setRectangleFromSprite')
+            weapon.bullets.setAll('body.setRectangleFromSprite');
+            //bulletCollisionGroup = game.physics.p2.createCollisionGroup(bulletGroup);
             weapon.trackSprite(player, 0, 0);
+
+
+            
             // -----------------------------------------------------------------------------------------------------
 
             // Platform Section ------------------------------------------------------------------------------------
