@@ -1,3 +1,94 @@
 .DS_Store
 Thumbs.db
 *~
+DG6/assets/Chain Bot Spirtes/ArmErrected.png
+DG6/assets/Chain Bot Spirtes/RobotCrouch.png
+DG6/assets/Chain Bot Spirtes/RobotFightIdle1.png
+DG6/assets/Chain Bot Spirtes/RobotFightIdle2.png
+DG6/assets/Chain Bot Spirtes/RobotFightIdle3.png
+DG6/assets/Chain Bot Spirtes/RobotHandIdle1.png
+DG6/assets/Chain Bot Spirtes/RobotHandIdle2.png
+DG6/assets/Chain Bot Spirtes/RobotHandIdle3.png
+DG6/assets/Chain Bot Spirtes/RobotHandIdle4.png
+DG6/assets/Chain Bot Spirtes/RobotHappy1.png
+DG6/assets/Chain Bot Spirtes/RobotHappy2.png
+DG6/assets/Chain Bot Spirtes/RobotHappy3.png
+DG6/assets/Chain Bot Spirtes/RobotHappy4.png
+DG6/assets/Chain Bot Spirtes/RobotIdle.png
+DG6/assets/Chain Bot Spirtes/RobotIdle2.png
+DG6/assets/Chain Bot Spirtes/RobotIdle3.png
+DG6/assets/Chain Bot Spirtes/RobotIdle4.png
+DG6/assets/Chain Bot Spirtes/RobotJump1.png
+DG6/assets/Chain Bot Spirtes/RobotJump2.png
+DG6/assets/Chain Bot Spirtes/RobotNeutral1.png
+DG6/assets/Chain Bot Spirtes/RobotNeutral2.png
+DG6/assets/Chain Bot Spirtes/RobotNeutral3.png
+DG6/assets/Chain Bot Spirtes/RobotNeutral4.png
+DG6/assets/Chain Bot Spirtes/RobotSad1.png
+DG6/assets/Chain Bot Spirtes/RobotSad2.png
+DG6/assets/Chain Bot Spirtes/RobotSad3.png
+DG6/assets/Chain Bot Spirtes/RobotSad4.png
+DG6/assets/Chain Bot Spirtes/RobotShoutIdle1.png
+DG6/assets/Chain Bot Spirtes/RobotShoutIdle2.png
+DG6/assets/Chain Bot Spirtes/RobotShoutIdle3.png
+DG6/assets/Chain Bot Spirtes/RobotShoutIdle4.png
+DG6/assets/Chain Bot Spirtes/RobotSleep.png
+DG6/assets/Chain Bot Spirtes/RobotTalkIdle1.png
+DG6/assets/Chain Bot Spirtes/RobotTalkIdle2.png
+DG6/assets/Chain Bot Spirtes/RobotTalkIdle3.png
+DG6/assets/Chain Bot Spirtes/RobotTalkIdle4.png
+DG6/assets/Chain Bot Spirtes/RobotWalk1.png
+DG6/assets/Chain Bot Spirtes/RobotWalk2.png
+DG6/assets/Grox1000_1/Grox1000/Angry.png
+DG6/assets/Grox1000_1/Grox1000/Arm.png
+DG6/assets/Grox1000_1/Grox1000/Base.xcf
+DG6/assets/Grox1000_1/Grox1000/Blink.png
+DG6/assets/Grox1000_1/Grox1000/Body.png
+DG6/assets/Grox1000_1/Grox1000/Crouch.png
+DG6/assets/Grox1000_1/Grox1000/Happy.png
+DG6/assets/Grox1000_1/Grox1000/Idle.png
+DG6/assets/Grox1000_1/Grox1000/Jump1.png
+DG6/assets/Grox1000_1/Grox1000/Jump2.png
+DG6/assets/Grox1000_1/Grox1000/Jump3.png
+DG6/assets/Grox1000_1/Grox1000/Legs.png
+DG6/assets/Grox1000_1/Grox1000/Neutral 1.png
+DG6/assets/Grox1000_1/Grox1000/Neutral 2.png
+DG6/assets/Grox1000_1/Grox1000/Neutral 3.png
+DG6/assets/Grox1000_1/Grox1000/Neutral 4.png
+DG6/assets/Grox1000_1/Grox1000/Skeleton1.png
+DG6/assets/Grox1000_1/Grox1000/Skeleton2.png
+DG6/assets/Grox1000_1/Grox1000/Skeleton3.png
+DG6/assets/Grox1000_1/Grox1000/Walk1.png
+DG6/assets/Grox1000_1/Grox1000/Walk2.png
+DG6/assets/Player/Parts/artflow_201702201234.psd
+DG6/assets/Player/Parts/Booty.png
+DG6/assets/Player/Parts/BulletWithEffect.png
+DG6/assets/Player/Parts/Cheast.png
+DG6/assets/Player/Parts/head.png
+DG6/assets/Player/Parts/HeadClosedEyes.png
+DG6/assets/Player/Parts/Hips.png
+DG6/assets/Player/Parts/laser.png
+DG6/assets/Player/Parts/LaserShadow.png
+DG6/assets/Player/Parts/LBackShoes.png
+DG6/assets/Player/Parts/LFrontShoes.png
+DG6/assets/Player/Parts/LLeaftLeag.png
+DG6/assets/Player/Parts/LLowerArm.png
+DG6/assets/Player/Parts/LUpperArm.png
+DG6/assets/Player/Parts/LUpperLeag.png
+DG6/assets/Player/Parts/RBackShoes.png
+DG6/assets/Player/Parts/refill.png
+DG6/assets/Player/Parts/refill.psd
+DG6/assets/Player/Parts/RFrontShoes.png
+DG6/assets/Player/Parts/RLHand.png
+DG6/assets/Player/Parts/RLLeag.png
+DG6/assets/Player/Parts/RUHand.png
+DG6/assets/Player/Parts/RULeag.png
+DG6/assets/Player/Parts/SomeKindOfBullet.png
+DG6/assets/Player/Sprite Sheet/DyingAnimation.png
+DG6/assets/Player/Sprite Sheet/idle Animation.png
+DG6/assets/Player/Sprite Sheet/JumpAnimation.png
+DG6/assets/Player/Sprite Sheet/Run and Sword attack animation.png
+DG6/assets/Player/Sprite Sheet/runAnimation.png
+DG6/assets/Player/Sprite Sheet/Shooting.png
+DG6/assets/Player/Sprite Sheet/SwordAttackAnimation.png
+DG6/assets/Player/Sprite Sheet/walkAnimation.png
