@@ -8,6 +8,7 @@ GameStates.makeGame = function( game, shared ) {
     var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null;
     var weapon = null, shot, fireButton, bulletGroup;
+    var grappleDeployed = false;
     var map;
     var layer;
     var boom, hop, bgm;
@@ -21,7 +22,6 @@ GameStates.makeGame = function( game, shared ) {
         player.destroy();
         platformGroup.destroy();
         enemyGroup.destroy();
-        weapon.destroy();
         //  Then let's go back to the main menu.
         game.state.start('MainMenu');
         
@@ -105,17 +105,17 @@ GameStates.makeGame = function( game, shared ) {
             //bulletGroup = game.add.group();
             //bulletGroup.enableBodyDebug = true;
 
-            weapon = game.add.weapon(100, 'bullet', null, bulletGroup);
-            //weapon.bullets.enableBody = true;
-            //weapon.bullets.physicsBodyType = Phaser.Physics.P2JS;
-            weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
-            weapon.bulletSpeed = 650;
-            weapon.fireAngle = Phaser.ANGLE_DOWN;
-            weapon.bulletAngleVariance = 20;
-            weapon.multiFire = true;
-            //weapon.bulletGravity.y = 600;
-            //bulletCollisionGroup = game.physics.p2.createCollisionGroup(bulletGroup);
-            weapon.trackSprite(player, 0, 16);
+            // weapon = game.add.weapon(100, 'bullet', null, bulletGroup);
+            // //weapon.bullets.enableBody = true;
+            // //weapon.bullets.physicsBodyType = Phaser.Physics.P2JS;
+            // weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
+            // weapon.bulletSpeed = 650;
+            // weapon.fireAngle = Phaser.ANGLE_DOWN;
+            // weapon.bulletAngleVariance = 20;
+            // weapon.multiFire = true;
+            // //weapon.bulletGravity.y = 600;
+            // //bulletCollisionGroup = game.physics.p2.createCollisionGroup(bulletGroup);
+            // weapon.trackSprite(player, 0, 16);
 
 
             

@@ -23,22 +23,22 @@ GameStates.makePreloader = function( game ) {
     
             //	Here we load the rest of the assets our game needs.
             //	As this is just a Project Template I've not provided these assets, swap them for your own.
-            game.load.image('titlePage', 'assets/title.jpg');
-            game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
-            game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
+            game.load.image('titlePage', 'assets/background/title.jpg');
+            game.load.atlas('playButton', 'assets/ui/play_button.png', 'assets/json/play_button.json');
+            game.load.audio('titleMusic', ['assets/audio/Poppers and Prosecco.mp3']);
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
-            game.load.image('CityFire', 'assets/Skyline_flames.png');
-            game.load.image('startButton', 'assets/StartButton.png');
-            game.load.image('optionsButton', 'assets/OptionsButton.png');
-            game.load.image('bigBG', 'assets/Big_Silo.png');
+            game.load.image('CityFire', 'assets/backgrounds/Skyline_flames.png');
+            game.load.image('startButton', 'assets/ui/StartButton.png');
+            game.load.image('optionsButton', 'assets/ui/OptionsButton.png');
+            game.load.image('bigBG', 'assets/backgrounds/Big_Silo.png');
             game.load.spritesheet( 'segments', 'assets/segments.png', 16, 32);
-            game.load.image('tiles', 'assets/scifi_platformTiles_16x16.png');
-            game.load.tilemap('map', 'assets/map2_1.csv', null, Phaser.Tilemap.CSV);
+            game.load.image('tiles', 'assets/tiles/scifi_platformTiles_16x16.png');
+            game.load.tilemap('map', 'assets/tiles/map2_1.csv', null, Phaser.Tilemap.CSV);
             game.load.image('bullet', 'assets/bullet.png');
-            game.load.audio('boom', 'assets/Explosion.wav');
-            game.load.audio('hop', 'assets/Jump.wav');
-            //game.load.audio('intro', 'assets/01 Intro.mp3');
+            game.load.audio('boom', 'assets/audio/Explosion.wav');
+            game.load.audio('hop', 'assets/audio/Jump.wav');
+            game.load.audio('intro', 'assets/audio/01 Intro.mp3');
 
         },
     
