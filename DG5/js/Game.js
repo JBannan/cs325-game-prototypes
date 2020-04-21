@@ -148,6 +148,7 @@ GameStates.makeGame = function( game, shared ) {
 
             fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
             game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR);
+            mouse = Phaser.Input.activePointer;
         },
 
          /*createEnemies: function () {
@@ -175,7 +176,10 @@ GameStates.makeGame = function( game, shared ) {
             if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)) {
                 
                 player.body.velocity.y -= 200;
-                //game.physics.arcade.moveToPointer(player, Phaser.Input.activePointer, 200);
+                var angle = game.physics.arcade.angleToPointer(player, mouse);
+                var point = game.physics.arcade.velocityFromAngle(angle, 200);
+                player.body.velocity.x -= point.x;
+                player.body.velocity.y -= point.y;
 
                 boom.play();
                 weapon.fire();

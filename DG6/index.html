@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Digital Game 5</title>
+	<script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/Game.js"></script>
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Jump The Gun</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+The game is a platformer that aims to use the recoil from the player's weapon as a primary method of movement.
+</li>
+
+<li><strong>Technical Merit:</strong>
+The game uses a tilemap to build the level and directly translates the tiles there to tangible objects.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+My original plan was to use P2 physics so that I could shoot a projectile at a platform and then connect the player (via their weapon) and the platform where it was shot with a spring with no springiness. This was completely scrapped when I found out that phaser weapons would never use anything but Arcade physics. These different physics systems would never interact so any bullet/platform interaction is impossible.
+I also considered using box2d that looked like it had weapon/rope/platform physics that i wanted to implement, but came at a price over $0, too much for me. Having never gotten past the weapon system, the rest of the game (more level/enemies/score) has not yet been implemented.
+Additionally, Recoil was also bugged, always accelerating the player in the (same) wrong direction or not doing anything. 
+</li>
+
+<li><strong>Prototype Assets:</strong>
+<ul>
+<li>Loading screen: self-made</li>
+<li>Start Menu: self-made</li>
+<li>Button: self-made</a></li>
+<li>Player Sprite/Bullets: self-made</li>
+<li>Music: "Poppers and Prosecco" Kevin MacLeod (<a href="incompetech.com">incompetech.com</a>). Licensed under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons: By Attribution 3.0 License</a></li>
+<li>Sound Effects: self-made</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
+<ul>
+<li>The code for this example is adapted from the <a href="https://github.com/photonstorm/phaser/tree/v2.6.2/resources/Project%20Templates/Basic">Phaser Basic Project Template</a></li>
+</ul>
+</li>
+
+<li><strong>High Concept:</strong>
+Blast yourself around the map and destroy any enemies you find. (Formerly Grapple/Swing around...)
+</li>
+
+<li><strong>Theme:</strong>
+N/A
+</li>
+
+<li><strong>Mandated Variety:</strong>
+N/A
+</li>
+
+<li><strong>Prototype Goal:</strong>
+Implement Tilemaps to speed up level design. Use Recoil as a movement function.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+What experience do you want players to have when playing your game?
+</li>
+
+<li><strong>Gameplay:</strong>
+The player can use W/A/D to Jump/Move Left/Move Right. The spacebar will fire the player's weapon downwards and accelerate the player upwards.
+</li>
+
+<li><strong>Strategies:</strong>
+Currently, the player can just spam fire and essentially have a jetpack to move around with.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+N/a
+</li>
+
+<li><strong>Target Audience:</strong>
+Players of platformer games.
+</li>
+
+<li><strong>Play Time:</strong>
+The game only has enough content for ~1 minute or things to play around with.
+</li>
+
+</ul>
+</div>
+</body>
+</html>
