@@ -47,11 +47,11 @@ GameStates.makeGame = function( game, shared ) {
             // Initializing Physics System(s)
             game.physics.startSystem(Phaser.Physics.ARCADE);
             game.physics.arcade.gravity.y = 800;
-            /*game.physics.startSystem(Phaser.Physics.P2JS);
+            game.physics.startSystem(Phaser.Physics.P2JS);
             game.physics.p2.gravity.y = 0;
             game.physics.p2.setImpactEvents(true);
             game.physics.p2.defaultRestitution = 0.1;
-            game.physics.p2.gravity.y = 1200;*/
+            game.physics.p2.gravity.y = 1200;
 
             map = game.add.tilemap('map',16,16);
             map.addTilesetImage('tiles');
@@ -62,13 +62,13 @@ GameStates.makeGame = function( game, shared ) {
             layer.resizeWorld();
 
             map.setCollisionBetween(1, 467);
-            //layer.debug = true;
+            layer.debug = true;
             
-            //tiles = game.physics.p2.convertTilemap(map, layer);
+            tiles = game.physics.p2.convertTilemap(map, layer);
             //console.log(map.collision);
-            //tileCollisionGroup = game.physics.p2.createCollisionGroup();
-            //tileGroup = game.add.group(game, null, 'tileGroup', false, true, Phaser.Physics.P2JS);
-            //tileGroup.addMultiple(tiles);
+            tileCollisionGroup = game.physics.p2.createCollisionGroup();
+            tileGroup = game.add.group(game, null, 'tileGroup', false, true, Phaser.Physics.P2JS);
+            tileGroup.addMultiple(tiles);
             //console.log('added');
             
 
@@ -134,9 +134,6 @@ GameStates.makeGame = function( game, shared ) {
             var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
             text.anchor.setTo( 0.5, 0.0 );
             
-            // When you click on the sprite, you go back to the MainMenu.
-            //bouncy.inputEnabled = true;
-            //bouncy.events.onInputDown.add( function() { quitGame(); }, this );
 
             game.camera.follow(player);
 
@@ -150,10 +147,6 @@ GameStates.makeGame = function( game, shared ) {
             game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR);
             mouse = Phaser.Input.activePointer;
         },
-
-         /*createEnemies: function () {
-
-         },*/
     
         update: function () {
             var playerDown = game.physics.arcade.collide(player, layer);
