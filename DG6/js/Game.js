@@ -3,17 +3,17 @@
 GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
     var player = null;
-    var cursors = null, leftKey, rightKey;
+    var cursors = null, leftKey, rightKey, jumping = false;
     var platformGroup = null;
     var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null;
     var weapon = null, shot, fireButton, bulletGroup;
-    var grappleDeployed = false;
+    var grappleDeployed = false, firestate = false;
     var map;
     var layer;
     var boom, hop, bgm;
-    var tiles, tileGroup;
-    var line, drawLine = false, mouse, mouseSpring;
+    var tiles, tileGroup, tileHits = [];
+    var line, line2, ray, drawLine = false, mouse, mouseSpring;
     
     function quitGame() {
 
@@ -31,7 +31,10 @@ GameStates.makeGame = function( game, shared ) {
     
         create: function () {
             
-    
+            line = new Phaser.Line();
+            line2 = new Phaser.Line();
+
+
             // Fit 1600x1200 BG image
             game.world.setBounds(0,0,1600,1200);
             game.add.tileSprite(0,0, 1600, 1200, 'bigBG');
@@ -39,14 +42,17 @@ GameStates.makeGame = function( game, shared ) {
 
             hop = game.add.audio('hop');
             boom = game.add.audio('boom');
-            //bgm = game.add.audio('intro');
-            //bgm.loop = true;
-            //bgm.play();
+            bgm = game.add.audio('intro');
+            bgm.loop = true;
+            bgm.play();
 
-            
+            this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
+            this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+            this.bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
+            this.game.add.image(0, 0, this.bitmap);
             // Initializing Physics System(s)
-            game.physics.startSystem(Phaser.Physics.ARCADE);
-            game.physics.arcade.gravity.y = 800;
+            //game.physics.startSystem(Phaser.Physics.ARCADE);
+            //game.physics.arcade.gravity.y = 800;
             game.physics.startSystem(Phaser.Physics.P2JS);
             game.physics.p2.gravity.y = 0;
             game.physics.p2.setImpactEvents(true);
@@ -64,68 +70,49 @@ GameStates.makeGame = function( game, shared ) {
             map.setCollisionBetween(1, 467);
             layer.debug = true;
             
-            tiles = game.physics.p2.convertTilemap(map, layer);
+            game.physics.p2.convertTilemap(map, layer);
             //console.log(map.collision);
-            tileCollisionGroup = game.physics.p2.createCollisionGroup();
-            tileGroup = game.add.group(game, null, 'tileGroup', false, true, Phaser.Physics.P2JS);
-            tileGroup.addMultiple(tiles);
+            //tileCollisionGroup = game.physics.p2.createCollisionGroup();
+            // tileGroup = game.add.group(game, null, 'tileGroup', false, true, Phaser.Physics.P2JS);
+            // tileGroup.addMultiple(tiles);
             //console.log('added');
             
 
-            /* P2 Collision Groups
+            // P2 Collision Groups
             playerCollisionGroup = game.physics.p2.createCollisionGroup();
             enemyCollisionGroup = game.physics.p2.createCollisionGroup();
-            platformCollisionGroup = game.physics.p2.createCollisionGroup();*/
-            //game.physics.p2.updateBoundsCollisionGroup();// Enable Bounds Collision
+            platformCollisionGroup = game.physics.p2.createCollisionGroup();
+            game.physics.p2.updateBoundsCollisionGroup();// Enable Bounds Collision
             
-
-            // Enemy Section ---------------------------------------------------------------------------------------
-            //enemyGroup = game.add.group();
-            //enemyGroup.enableBody = true;
-            //createEnemies();
-            // -----------------------------------------------------------------------------------------------------
-
 
             // Player Section --------------------------------------------------------------------------------------
             player = game.add.sprite( 60, game.world.height - 50, 'segments', 1);
-            game.physics.enable(player, Phaser.Physics.ARCADE);
+            //game.physics.enable(player, Phaser.Physics.ARCADE);
             player.anchor.setTo(0.5, 0.5);
-            player.body.collideWorldBounds = true;
-            //game.physics.p2.enable(player);
-            //game.physics.p2.setBoundsToWorld(true, true, true, true, false);
-            //player.body.setRectangleFromSprite();
-            //player.body.fixedRotation = true;
+            //player.body.collideWorldBounds = true;
+            game.physics.p2.enable(player);
+            player.body.setRectangleFromSprite();
+            game.physics.p2.setBoundsToWorld(true, true, true, true, false);
+            
+            player.body.fixedRotation = true;
             //player.body.setCollisionGroup(playerCollisionGroup);
             
             // What Player Collides With
-            //player.body.collides(platformCollisionGroup);
-            //player.body.collides(enemyCollisionGroup);
+            // player.body.collides(platformCollisionGroup);
+            // player.body.collides(enemyCollisionGroup);
             //player.body.damping = 0.1;
 
-            //bulletGroup = game.add.group();
-            //bulletGroup.enableBodyDebug = true;
+            // Experimental P2JS weapon system
+            // bulletGroup = game.add.group();
+            // bulletGroup.enableBody = true;
+            // bulletGroup.physicsBodyType = Phaser.Physics.P2JS;
+            // bulletGroup.enableBodyDebug = true;
+            // bulletGroup.createMultiple(1, 'bullet');
 
-            // weapon = game.add.weapon(100, 'bullet', null, bulletGroup);
-            // //weapon.bullets.enableBody = true;
-            // //weapon.bullets.physicsBodyType = Phaser.Physics.P2JS;
-            // weapon.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
-            // weapon.bulletSpeed = 650;
-            // weapon.fireAngle = Phaser.ANGLE_DOWN;
-            // weapon.bulletAngleVariance = 20;
-            // weapon.multiFire = true;
-            // //weapon.bulletGravity.y = 600;
-            // //bulletCollisionGroup = game.physics.p2.createCollisionGroup(bulletGroup);
-            // weapon.trackSprite(player, 0, 16);
-
-
-            
-            // -----------------------------------------------------------------------------------------------------
-
-            // Platform Section ------------------------------------------------------------------------------------
-            /*platformGroup = game.add.group();
-            platformGroup.enableBody = true;
-            this.buildPlatforms();
-            platformGroup.setAll('body.immovable', true);*/
+            // bulletGroup.setAll('anchor.x', 0.5);
+            // bulletGroup.setAll('anchor.y', 0.5);
+            // bulletGroup.setAll('outOfCameraBoundsKill', true);
+ 
             // -----------------------------------------------------------------------------------------------------
 
             // Add some text using a CSS style.
@@ -144,55 +131,141 @@ GameStates.makeGame = function( game, shared ) {
             rightKey = game.input.keyboard.addKey(Phaser.KeyCode.D);
 
             fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+            
             game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR);
-            mouse = Phaser.Input.activePointer;
+            mouse = this.game.input.activePointer;
+            //fireButton.addCallbacks(this, this.startLine(player), this.raycast(mouse));
         },
     
         update: function () {
-            var playerDown = game.physics.arcade.collide(player, layer);
-            game.physics.arcade.collide(weapon.bullets, layer, this.bulletLayerHit);
+            //var playerDown = game.physics.arcade.collide(player, layer);
+            //game.physics.arcade.collide(weapon.bullets, layer, this.bulletLayerHit);
+            
+            
 
-            if (game.input.keyboard.justPressed(Phaser.Keyboard.W) && playerDown) {
+            if (game.input.keyboard.justPressed(Phaser.Keyboard.W) && player.body.velocity.y <= 0.01 && jumping==false) {
+                jumping = true;
                 hop.play();
                 player.body.velocity.y = -300;
             }
+            if (player.body.velocity.y >= 6) {
+                jumping = false;
+            }
             if (rightKey.isDown) {
-                player.body.velocity.x = 400;
+                player.body.velocity.x = 200;
             }
             else if (leftKey.isDown) {
-                player.body.velocity.x = -400;
+                player.body.velocity.x = -200;
             }
             else {
                 player.body.velocity.x = 0;
             }
-
+            this.bitmap.context.clearRect(0, 0, this.game.width, this.game.height);
             if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)) {
-                
-                player.body.velocity.y -= 200;
-                var angle = game.physics.arcade.angleToPointer(player, mouse);
-                var point = game.physics.arcade.velocityFromAngle(angle, 200);
-                player.body.velocity.x -= point.x;
-                player.body.velocity.y -= point.y;
+                ray = new Phaser.Line(player.x, player.y, mouse.worldX, mouse.worldY);
+                var intersect = this.getWallIntersection(ray);
 
-                boom.play();
-                weapon.fire();
-                weapon.fire();
-                weapon.fire();
-                weapon.fire();
-                weapon.fire();
-                weapon.fire();
-                weapon.fire();
-                console.log("fire");
+                if (intersect) {
+                    this.bitmap.context.beginPath();
+                    this.bitmap.context.moveTo(player.x, player.y);
+                    this.bitmap.context.lineTo(mouse.x, mouse.y);
+                    this.bitmap.context.stroke();
+                    drawLine = true;
+                }
+                else {
+                    this.bitmap.context.beginPath();
+                    this.bitmap.context.moveTo(player.x, player.y);
+                    this.bitmap.context.lineTo(mouse.x, mouse.y);
+                    this.bitmap.context.stroke();
+                    drawLine = false;
+                }
+                this.bitmap.dirty = true;
             }
-            
+            // if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)) {
+            //     this.startLine(player);
+            //     this.raycast(mouse);
+            // }
         },
 
-        bulletLayerHit: function (bullet, lay) {
-            bullet.kill();
+        getWallIntersection: function (ray) {
+            var distanceToWall = Number.POSITIVE_INFINITY;
+            var closestIntersection = null;
+            //tileHits = layer.getRayCastTiles(ray, 4, false, false);
+            map.tiles.forEach(function(wall) {
+                var lines = [
+                    new Phaser.Line(wall.x, wall.y, wall.x + wall.width, wall.y),
+                    new Phaser.Line(wall.x, wall.y, wall.x, wall.y + wall.height),
+                    new Phaser.Line(wall.x + wall.width, wall.y,
+                        wall.x + wall.width, wall.y + wall.height),
+                    new Phaser.Line(wall.x, wall.y + wall.height,
+                        wall.x + wall.width, wall.y + wall.height)
+                ];
+
+                for (var i = 0; i < lines.length; i++) {
+                    var intersect = Phaser.Line.intersects(ray, lines[i]);
+                    if (intersect) {
+                        var distance = this.game.math.distance(ray.start.x, ray.start.y, intersect.x, intersect.y);
+                        if (distance < distanceToWall) {
+                            distanceToWall = distance;
+                            closestIntersection = intersect;
+                        }
+                    }
+                }
+            }, this);
+            return closestIntersection;
         },
+
+        // startLine: function (player) {
+        //     if (tileHits.length > 0) {
+        //         for (var i = 0; i < tileHits.length; i++)
+        //         {
+        //             tileHits[i].debug = false;
+        //         }
+
+        //         layer.dirty = true;
+        //     }
+
+        //     line.start.set(player.body.x, player.body.y);
+        // },
+
+        // raycast: function (pointer) {
+        //     line.end.set(pointer.worldX, pointer.worldY);
+
+        //     tileHits = layer.getRayCastTiles(line, 4, false, false);
+
+        //     var closest;
+        //     var dist;
+
+        //     if (tileHits.length > 0)
+        //     {
+        //         closest = tileHits[0];
+        //         dist = Phaser.Math.distanceSq(player.worldX, player.worldY, tileHits[0].worldX, tileHits[0].worldY);
+        //         //  Just so we can visually see the tiles
+        //         for (var i = 0; i < tileHits.length; i++)
+        //         {
+        //             console.log(dist);
+        //             //tileHits[i].debug = true;
+        //             var newDist = Phaser.Math.distanceSq(player.worldX, player.worldY, 
+        //                 tileHits[i].worldX, tileHits[i].worldY);
+        //             if (newDist < dist) {
+        //                 closest = tileHits[i];
+        //             }
+        //         } 
+        //         console.log(tileHits.length-1)
+        //         //line.length = dist;
+        //         closest.debug = true;
+        //         //line2.setTo(player.worldX, player.worldY, closest.worldX+8, closest.worldY+8);
+        //         line2.setTo(player.x, player.y, tileHits[tileHits.length-1].worldX+8, tileHits[tileHits.length-1].worldY+8);
+
+        //         layer.dirty = true;
+        //     }
+        // },
 
         render: function () {
 
+            if (drawLine) {
+                game.debug.geom(ray);
+            }
             //weapon.debug();
             //game.debug.cameraInfo(game.camera, 32, 32);
 
