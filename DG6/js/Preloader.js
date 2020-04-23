@@ -25,7 +25,7 @@ GameStates.makePreloader = function( game ) {
             //	As this is just a Project Template I've not provided these assets, swap them for your own.
             game.load.image('titlePage', 'assets/backgrounds/title.jpg');
             game.load.atlas('playButton', 'assets/ui/play_button.png', 'assets/json/play_button.json');
-            game.load.audio('titleMusic', ['assets/audio/Poppers and Prosecco.mp3']);
+            game.load.audio('titleMusic', ['assets/audio/01 Intro.mp3']);
             //	+ lots of other required assets here
             game.load.image( 'logo', 'assets/phaser.png' );
             game.load.image('CityFire', 'assets/backgrounds/Skyline_flames.png');
@@ -38,7 +38,10 @@ GameStates.makePreloader = function( game ) {
             game.load.image('bullet', 'assets/bullet.png');
             game.load.audio('boom', 'assets/audio/Explosion.wav');
             game.load.audio('hop', 'assets/audio/Jump.wav');
-            game.load.audio('intro', 'assets/audio/01 Intro.mp3');
+            game.load.audio('intro', 'assets/audio/fight.wav');
+            game.load.audio('hit_hurt', 'assets/audio/Hit_Hurt.wav');
+            game.load.audio('kill_boom', 'assets/audio/Kill_Boom.wav');
+            game.load.audio('laser', 'assets/audio/Laser_Shoot.wav');
 
         },
     

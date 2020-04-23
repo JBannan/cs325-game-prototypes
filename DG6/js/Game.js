@@ -7,13 +7,14 @@ GameStates.makeGame = function( game, shared ) {
     var platformGroup = null;
     var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null;
-    var weapon = null, shot, fireButton, bulletGroup;
+    var weapon = null, shot = 1, fireButton, bulletGroup, switchFire;
     var grappleDeployed = false, firestate = false;
     var map;
     var layer;
     var killCount = 0;
-    var boom, hop, bgm;
+    var boom, hop, bgm, dead, laser;
     var tiles, tileGroup, tileHits = [];
+    var text, style;
     var line, line2, ray, drawLine = false, mouse, mouseSpring;
     
     function quitGame() {
@@ -41,6 +42,8 @@ GameStates.makeGame = function( game, shared ) {
             game.add.tileSprite(0,0, 1600, 1200, 'bigBG');
             game.camera.setPosition(0, 600);
 
+            dead = game.add.audio('kill_boom');
+            laser = game.add.audio('laser');
             hop = game.add.audio('hop');
             boom = game.add.audio('boom');
             bgm = game.add.audio('intro');
@@ -54,7 +57,7 @@ GameStates.makeGame = function( game, shared ) {
 
             // Initializing Physics System(s)
             //game.physics.startSystem(Phaser.Physics.ARCADE);
-            //game.physics.arcade.gravity.y = 800;
+            game.physics.arcade.gravity.y = 800;
             // game.physics.startSystem(Phaser.Physics.P2JS);
             // game.physics.p2.gravity.y = 0;
             // game.physics.p2.setImpactEvents(true);
@@ -70,26 +73,11 @@ GameStates.makeGame = function( game, shared ) {
             layer.resizeWorld();
 
             map.setCollisionBetween(1, 467);
-            //layer.debug = true;
             
-            //game.physics.p2.convertTilemap(map, layer);
-            //console.log(map.collision);
-            //tileCollisionGroup = game.physics.p2.createCollisionGroup();
-            // tileGroup = game.add.group(game, null, 'tileGroup', false, true, Phaser.Physics.P2JS);
-            // tileGroup.addMultiple(tiles);
-            //console.log('added');
-            
-
-            // P2 Collision Groups
-            // playerCollisionGroup = game.physics.p2.createCollisionGroup();
-            // enemyCollisionGroup = game.physics.p2.createCollisionGroup();
-            // platformCollisionGroup = game.physics.p2.createCollisionGroup();
-            // game.physics.p2.updateBoundsCollisionGroup();// Enable Bounds Collision
-
             enemyGroup = game.add.group();
             enemyGroup.enableBody = true;
             this.placeEnemies();
-            enemyGroup.setAll('body.gravity.y', 900);
+            //enemyGroup.setAll('body.gravity.y', 900);
             
             
 
@@ -120,9 +108,9 @@ GameStates.makeGame = function( game, shared ) {
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
-            var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-            var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
-            text.anchor.setTo( 0.5, 0.0 );
+            style = { font: "14px Verdana", fill: "#9999ff", align: "center" };
+            text = game.add.text( 15, 15, killCount, style );
+            text.fixedToCamera = true;
             
 
             game.camera.follow(player);
@@ -132,6 +120,7 @@ GameStates.makeGame = function( game, shared ) {
             cursors = game.input.keyboard.createCursorKeys();
             leftKey = game.input.keyboard.addKey(Phaser.KeyCode.A);
             rightKey = game.input.keyboard.addKey(Phaser.KeyCode.D);
+            switchFire = game.input.keyboard.addKey(Phaser.KeyCode.X);
 
             fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
             
@@ -157,10 +146,14 @@ GameStates.makeGame = function( game, shared ) {
             game.physics.arcade.collide(enemyGroup, layer);
             game.physics.arcade.collide(enemyGroup, weapon.bullets, this.enemyHit);
             
+            if (killCount == 15) {
+                this.quitGame();
+            }
+
 
             if (game.input.keyboard.justPressed(Phaser.Keyboard.W) && playerDown) {
                 hop.play();
-                player.body.velocity.y = -300;
+                player.body.velocity.y = -350;
             }
             if (rightKey.isDown && playerDown) {
                 player.body.velocity.x = 200;
@@ -173,11 +166,26 @@ GameStates.makeGame = function( game, shared ) {
                     player.body.velocity.x = 0;
                 }
                 else {
-                    player.body.drag.x = 400;
+                    player.body.drag.x = 300;
                 }
             }
 
-            if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)) {
+            if (game.input.keyboard.justPressed(Phaser.Keyboard.X)) {
+                weapon.killAll();
+                shot *= -1;
+                if (shot == -1) {
+                    weapon.bulletLifespan = 7000;
+                    weapon.bulletSpeed = 1050;
+                    weapon.bulletAngleVariance = 0;
+                }
+                else {
+                    weapon.bulletLifespan = 700;
+                    weapon.bulletSpeed = 650;
+                    weapon.bulletAngleVariance = 20;
+                }
+            }
+
+            if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR) && shot === 1) {
                 
                 game.physics.arcade.moveToPointer(player, -500);
 
@@ -189,13 +197,22 @@ GameStates.makeGame = function( game, shared ) {
                 weapon.fireAtPointer(this.game.input.activePointer);
                 weapon.fireAtPointer(this.game.input.activePointer);
                 weapon.fireAtPointer(this.game.input.activePointer);
-                console.log("fire");
+            }
+            else if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR) && shot === -1) {
+                game.physics.arcade.moveToPointer(player, -60);
+                laser.play();
+                weapon.fireAtPointer(this.game.input.activePointer);
             }
         },
 
         enemyHit: function (enemy, bullet) {
+            dead.play();
             enemy.kill();
+            bullet.kill();
             killCount++;
+            text.destroy();
+            text = game.add.text( 15, 15, killCount, style );
+            text.fixedToCamera = true;
         },
 
         render: function () {

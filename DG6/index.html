@@ -37,24 +37,26 @@ The game is a platformer that aims to use the recoil from the player's weapon as
 </li>
 
 <li><strong>Technical Merit:</strong>
-The game uses a tilemap to build the level and directly translates the tiles there to tangible objects.
+The game uses a tilemap to build the level and directly translates the tiles there to tangible objects. The player's weapon now has recoil, launching the player in the opposite direction of where the weapon was fired.
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-My original plan was to use P2 physics so that I could shoot a projectile at a platform and then connect the player (via their weapon) and the platform where it was shot with a spring with no springiness. This was completely scrapped when I found out that phaser weapons would never use anything but Arcade physics. These different physics systems would never interact so any bullet/platform interaction is impossible.
-I also considered using box2d that looked like it had weapon/rope/platform physics that i wanted to implement, but came at a price over $0, too much for me. Having never gotten past the weapon system, the rest of the game (more level/enemies/score) has not yet been implemented.
-Additionally, Recoil was also bugged, always accelerating the player in the (same) wrong direction or not doing anything. 
+Again I tried to implement complex P2 physics and grappling functionality. This time I tried to use raycasting rather than a weapon to shoot the grappling hook at a platform. This caused an immense amount of trouble and never worked properly. 
+Instead I refined the gun recoil movement idea so that the player would be pushed opposite to the direction they fired. This gave me a kind of twitch air movement to play with. I added some variance in bullet speed to make it a bit more interesting. 
+Enemies have also been added to the game. 
 </li>
 
 <li><strong>Prototype Assets:</strong>
 <ul>
-<li>Loading screen: self-made</li>
+<li>Sprites: self-made</li>
 <li>Start Menu: self-made</li>
 <li>Button: self-made</a></li>
 <li>Player Sprite/Bullets: self-made</li>
-<li>Music: "Poppers and Prosecco" Kevin MacLeod (<a href="incompetech.com">incompetech.com</a>). Licensed under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons: By Attribution 3.0 License</a></li>
+<li>Menu Music: "Intro" Dreamcatcher</li>
+<li>BG Music: "fight" <a href="https://opengameart.org/content/fast-fight-battle-music">opengameart.org</a></li>
 <li>Sound Effects: self-made
 <li>Tileset: Sci-Fi Platform Tiles by Eris on <a href="https://opengameart.org/content/sci-fi-platform-tiles">opengameart.org</a></li>
+<li></li>
 </li>
 </ul>
 </li>
@@ -87,11 +89,11 @@ What experience do you want players to have when playing your game?
 </li>
 
 <li><strong>Gameplay:</strong>
-The player can use W/A/D to Jump/Move Left/Move Right. The spacebar will fire the player's weapon downwards and accelerate the player upwards.
+The player can use W/A/D to Jump/Move Left/Move Right. The spacebar will fire the player's weapon at the mouse and recoil the player in the opposite direction. This can be used as a form of movement but is planned to be limited by ammo in the future.
 </li>
 
 <li><strong>Strategies:</strong>
-Currently, the player can just spam fire and essentially have a jetpack to move around with.
+Currently, the player can just spam fire and essentially have a jetpack to move around with. Launching oneself straight into the air and then shooting sideways is likely the best way to hit more vertical enemies. Moving around the stage is also faster when using the weapon recoil as movement.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
