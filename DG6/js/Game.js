@@ -91,7 +91,7 @@ GameStates.makeGame = function( game, shared ) {
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
-            style = { font: "14px Verdana", fill: "#ffffff", align: "center" };
+            style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
             text = game.add.text( 15, 15, killCount, style );
             text.fixedToCamera = true;
             
