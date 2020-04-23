@@ -129,7 +129,7 @@ GameStates.makeGame = function( game, shared ) {
             game.physics.arcade.collide(enemyGroup, layer);
             game.physics.arcade.collide(enemyGroup, weapon.bullets, this.enemyHit);
             
-            if (enemyGroup.countLiving > 0) {
+            if (enemyGroup.countLiving() > 0) {
                 this.quitGame();
             }
 
