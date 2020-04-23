@@ -50,25 +50,13 @@ GameStates.makeGame = function( game, shared ) {
             bgm.loop = true;
             bgm.play();
 
-            // this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
-            // this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-            // this.bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
-            // this.game.add.image(0, 0, this.bitmap);
 
-            // Initializing Physics System(s)
-            //game.physics.startSystem(Phaser.Physics.ARCADE);
             game.physics.arcade.gravity.y = 800;
-            // game.physics.startSystem(Phaser.Physics.P2JS);
-            // game.physics.p2.gravity.y = 0;
-            // game.physics.p2.setImpactEvents(true);
-            // game.physics.p2.defaultRestitution = 0.1;
-            // game.physics.p2.gravity.y = 1200;
 
             map = game.add.tilemap('map',16,16);
             map.addTilesetImage('tiles');
 
             layer = map.createLayer(0);
-            //layerBG = map.createLayer('Tile Layer 2');
             
             layer.resizeWorld();
 
@@ -77,7 +65,6 @@ GameStates.makeGame = function( game, shared ) {
             enemyGroup = game.add.group();
             enemyGroup.enableBody = true;
             this.placeEnemies();
-            //enemyGroup.setAll('body.gravity.y', 900);
             
             
 
@@ -87,11 +74,7 @@ GameStates.makeGame = function( game, shared ) {
             player.anchor.setTo(0.5, 0.5);
             player.body.collideWorldBounds = true;
             player.body.gravity.y = 900;
-            //game.physics.p2.enable(player);
-            //player.body.setRectangleFromSprite();
-            //game.physics.p2.setBoundsToWorld(true, true, true, true, false);
             
-            //player.body.fixedRotation = true;
             
             weapon = game.add.weapon(35, 'bullet', null, bulletGroup);
             //weapon.bullets.enableBody = true;
@@ -108,7 +91,7 @@ GameStates.makeGame = function( game, shared ) {
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
-            style = { font: "14px Verdana", fill: "#9999ff", align: "center" };
+            style = { font: "14px Verdana", fill: "#ffffff", align: "center" };
             text = game.add.text( 15, 15, killCount, style );
             text.fixedToCamera = true;
             
@@ -220,12 +203,6 @@ GameStates.makeGame = function( game, shared ) {
         },
 
         render: function () {
-
-            // if (drawLine) {
-            //     game.debug.geom(line);
-            // }
-            //weapon.debug();
-            //game.debug.cameraInfo(game.camera, 32, 32);
 
         }
     };
