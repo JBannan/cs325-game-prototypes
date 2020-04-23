@@ -176,12 +176,16 @@ GameStates.makeGame = function( game, shared ) {
                 if (shot == -1) {
                     weapon.bulletLifespan = 7000;
                     weapon.bulletSpeed = 1050;
+                    weapon.bulletGravity.y = 200;
                     weapon.bulletAngleVariance = 0;
+                    weapon.bullets.setAll('tint', 0x22FFFF);
                 }
                 else {
                     weapon.bulletLifespan = 700;
                     weapon.bulletSpeed = 650;
+                    weapon.bulletGravity.y = 900;
                     weapon.bulletAngleVariance = 20;
+                    weapon.bullets.setAll('tint', 0xFFFFFF);
                 }
             }
 
