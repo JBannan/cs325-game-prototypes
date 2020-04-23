@@ -196,7 +196,7 @@ GameStates.makeGame = function( game, shared ) {
             dead.play();
             enemy.kill();
             bullet.kill();
-            killCount++;
+            killCount = enemyGroup.countDead();
             text.destroy();
             text = game.add.text( 15, 15, killCount, style );
             text.fixedToCamera = true;
