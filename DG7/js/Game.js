@@ -103,7 +103,7 @@ GameStates.makeGame = function( game, shared ) {
                 speedVariance: 0,
                 fireRate: 30,
                 bulletCount: 1,
-                hold: false,
+                hold: true,
                 weaponRecoil: -60
             };
 
@@ -113,12 +113,12 @@ GameStates.makeGame = function( game, shared ) {
                 speed: 650,
                 gravity: 900,
                 angleVariance: 20,
-                tint: 0xFF2222,
+                tint: 0xFFFFFF,
                 multiple: true,
                 speedVariance: 80,
                 fireRate: 4,
                 bulletCount: 7,
-                hold: true,
+                hold: false,
                 weaponRecoil: -600
             };
 
