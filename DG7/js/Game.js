@@ -21,9 +21,7 @@ GameStates.makeGame = function( game, shared ) {
 
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
-        player.destroy();
-        platformGroup.destroy();
-        enemyGroup.destroy();
+        
         //  Then let's go back to the main menu.
         game.state.start('MainMenu');
         
@@ -198,7 +196,7 @@ GameStates.makeGame = function( game, shared ) {
             game.physics.arcade.collide(enemyGroup, weapon.bullets, this.enemyHit);
             
             if (enemyGroup.countLiving() > 0) {
-                this.quitGame();
+                quitGame();
             }
 
 
