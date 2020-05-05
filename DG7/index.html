@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Digital Game 5</title>
+	<script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/Game.js"></script>
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Jump The Gun</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+The game is a platformer that aims to use the recoil from the player's weapon as a primary method of movement.
+</li>
+
+<li><strong>Technical Merit:</strong>
+The game uses a tilemap to build the level and directly translates the tiles there to tangible objects. The player's weapon now has recoil, launching the player in the opposite direction of where the weapon was fired.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+Again I tried to implement complex P2 physics and grappling functionality. This time I tried to use raycasting rather than a weapon to shoot the grappling hook at a platform. This caused an immense amount of trouble and never worked properly. 
+Instead I refined the gun recoil movement idea so that the player would be pushed opposite to the direction they fired. This gave me a kind of twitch air movement to play with. I added some variance in bullet speed to make it a bit more interesting. 
+Enemies have also been added to the game. 
+</li>
+
+<li><strong>Prototype Assets:</strong>
+<ul>
+<li>Sprites: self-made</li>
+<li>Start Menu: self-made</li>
+<li>Button: self-made</a></li>
+<li>Player Sprite/Bullets: self-made</li>
+<li>Menu Music: "Intro" Dreamcatcher</li>
+<li>BG Music: "fight" <a href="https://opengameart.org/content/fast-fight-battle-music">opengameart.org</a></li>
+<li>Sound Effects: self-made
+<li>Tileset: Sci-Fi Platform Tiles by Eris on <a href="https://opengameart.org/content/sci-fi-platform-tiles">opengameart.org</a></li>
+<li></li>
+</li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
+<ul>
+<li>The code for this example is adapted from the <a href="https://github.com/photonstorm/phaser/tree/v2.6.2/resources/Project%20Templates/Basic">Phaser Basic Project Template</a></li>
+</ul>
+</li>
+
+<li><strong>High Concept:</strong>
+Blast yourself around the map and destroy any enemies you find.
+</li>
+
+<li><strong>Theme:</strong>
+N/A
+</li>
+
+<li><strong>Mandated Variety:</strong>
+N/A
+</li>
+
+<li><strong>Prototype Goal:</strong>
+Implement Tilemaps to speed up level design. Use Recoil as a movement function.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+What experience do you want players to have when playing your game?
+</li>
+
+<li><strong>Gameplay:</strong>
+The player can use W/A/D to Jump/Move Left/Move Right. The spacebar will fire the player's weapon at the mouse and recoil the player in the opposite direction. This can be used as a form of movement but is planned to be limited by ammo in the future.
+ Pressing X will switch weapon modes. The first, a shotgun, has limited range, high recoil, and is more influenced by gravity. The second is more of a sniper rifle with more range, faster bullets, less drop-off, and less recoil. 
+</li>
+
+<li><strong>Strategies:</strong>
+Currently, the player can just spam fire and essentially have a jetpack to move around with. Launching oneself straight into the air and then shooting sideways is likely the best way to hit more vertical enemies. Moving around the stage is also faster when using the weapon recoil as movement.
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+N/a
+</li>
+
+<li><strong>Target Audience:</strong>
+Players of platformer games.
+</li>
+
+<li><strong>Play Time:</strong>
+The game only has enough content for ~1 minute or things to play around with.
+</li>
+
+</ul>
+</div>
+</body>
+</html>

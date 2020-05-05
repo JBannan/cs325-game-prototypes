@@ -5,17 +5,15 @@ GameStates.makeGame = function( game, shared ) {
     var player = null;
     var cursors = null, leftKey, rightKey, jumping = false;
     var platformGroup = null;
-    var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null;
     var weapon = null, shot = 1, fireButton, bulletGroup, switchFire;
-    var grappleDeployed = false, firestate = false;
     var map;
     var layer;
     var killCount = 0;
     var boom, hop, bgm, dead, laser;
     var tiles, tileGroup, tileHits = [];
     var text, style;
-    var line, line2, ray, drawLine = false, mouse, mouseSpring;
+    var mouse;
     
     function quitGame() {
 
