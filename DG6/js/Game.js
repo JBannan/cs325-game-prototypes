@@ -85,8 +85,10 @@ GameStates.makeGame = function( game, shared ) {
             weapon.bulletGravity.y = 900;
             weapon.trackSprite(player, 0, 0);
             weapon.bulletSpeedVariance = 80;
-            // -----------------------------------------------------------------------------------------------------
 
+            
+            // -----------------------------------------------------------------------------------------------------
+            
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
             style = { font: "20px Verdana", fill: "#ffffff", align: "center" };

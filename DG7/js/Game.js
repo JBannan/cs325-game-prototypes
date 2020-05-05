@@ -7,12 +7,12 @@ GameStates.makeGame = function( game, shared ) {
     var platformGroup = null;
     var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null;
-    var weapon = null, shot = 1, fireButton, bulletGroup, switchFire;
+    var weapon = null, shot = 1, fireButton, bulletGroup, switchFire, bulletsPerShot, holdFire = false, recoil = 0;
     var grappleDeployed = false, firestate = false;
     var map;
     var layer;
     var killCount = 0;
-    var boom, hop, bgm, dead, laser;
+    var boom, hop, bgm, dead, laser, laserWeapon, MG, pistol, shotgun;
     var tiles, tileGroup, tileHits = [];
     var text, style;
     var line, line2, ray, drawLine = false, mouse, mouseSpring;
@@ -76,17 +76,69 @@ GameStates.makeGame = function( game, shared ) {
             player.body.gravity.y = 900;
             
             
-            weapon = game.add.weapon(35, 'bullet', null, bulletGroup);
+            weapon = game.add.weapon(100, 'bullet', null, bulletGroup);
             //weapon.bullets.enableBody = true;
-            weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
-            weapon.bulletLifespan = 700;
-            weapon.bulletSpeed = 650;
-            weapon.fireAngle = Phaser.ANGLE_DOWN;
-            weapon.bulletAngleVariance = 20;
-            weapon.multiFire = true;
-            weapon.bulletGravity.y = 900;
-            weapon.trackSprite(player, 0, 0);
-            weapon.bulletSpeedVariance = 80;
+            laserWeapon = {
+                killType: Phaser.Weapon.KILL_LIFESPAN,
+                lifespan: 7000,
+                speed: 1050,
+                gravity: 200,
+                angleVariance: 0,
+                tint: 0x22FFFF,
+                multiple: false,
+                speedVariance: 0,
+                fireRate: 1,
+                bulletCount: 1,
+                hold: false,
+                weaponRecoil: -60
+            };
+
+            MG = {
+                killType: Phaser.Weapon.KILL_LIFESPAN,
+                lifespan: 3000,
+                speed: 780,
+                gravity: 400,
+                angleVariance: 10,
+                tint: 0xFF2222,
+                multiple: true,
+                speedVariance: 0,
+                fireRate: 30,
+                bulletCount: 1,
+                hold: false,
+                weaponRecoil: -60
+            };
+
+            shotgun = {
+                killType: Phaser.Weapon.KILL_LIFESPAN,
+                lifespan: 700,
+                speed: 650,
+                gravity: 900,
+                angleVariance: 20,
+                tint: 0xFF2222,
+                multiple: true,
+                speedVariance: 80,
+                fireRate: 4,
+                bulletCount: 7,
+                hold: true,
+                weaponRecoil: -600
+            };
+
+            pistol = {
+                killType: Phaser.Weapon.KILL_LIFESPAN,
+                lifespan: 3000,
+                speed: 780,
+                gravity: 400,
+                angleVariance: 10,
+                tint: 0xFF2222,
+                multiple: true,
+                speedVariance: 0,
+                fireRate: 15,
+                bulletCount: 1,
+                hold: false,
+                weaponRecoil: -10
+            };
+
+            this.setWeapon(shotgun);
             // -----------------------------------------------------------------------------------------------------
 
             // Add some text using a CSS style.
@@ -109,6 +161,22 @@ GameStates.makeGame = function( game, shared ) {
             
             game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR);
             mouse = this.game.input.activePointer;
+        },
+
+        setWeapon: function (weaponType) {
+            weapon.bulletKillType = weaponType.killType;
+            weapon.bulletLifespan = weaponType.lifespan;
+            weapon.bulletSpeed = weaponType.speed;
+            weapon.fireAngle = Phaser.ANGLE_DOWN;
+            weapon.bulletAngleVariance = weaponType.angleVariance;
+            weapon.multiFire = weaponType.multiple;
+            weapon.bulletGravity.y = weaponType.gravity;
+            weapon.trackSprite(player, 0, 0);
+            weapon.bulletSpeedVariance = weaponType.speedVariance;
+            weapon.bullets.setAll('tint', weaponType.tint);
+            bulletsPerShot = weaponType.bulletCount;
+            holdFire = weaponType.hold;
+            recoil = weaponType.weaponRecoil;
         },
 
         placeEnemies: function () {
@@ -155,40 +223,26 @@ GameStates.makeGame = function( game, shared ) {
 
             if (game.input.keyboard.justPressed(Phaser.Keyboard.X)) {
                 weapon.killAll();
-                shot *= -1;
-                if (shot == -1) {
-                    weapon.bulletLifespan = 7000;
-                    weapon.bulletSpeed = 1050;
-                    weapon.bulletGravity.y = 200;
-                    weapon.bulletAngleVariance = 0;
-                    weapon.bullets.setAll('tint', 0x22FFFF);
-                }
-                else {
-                    weapon.bulletLifespan = 700;
-                    weapon.bulletSpeed = 650;
-                    weapon.bulletGravity.y = 900;
-                    weapon.bulletAngleVariance = 20;
-                    weapon.bullets.setAll('tint', 0xFFFFFF);
-                }
-            }
-
-            if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR) && shot === 1) {
                 
-                game.physics.arcade.moveToPointer(player, -500);
-
-                boom.play();
-                weapon.fireAtPointer(this.game.input.activePointer);
-                weapon.fireAtPointer(this.game.input.activePointer);
-                weapon.fireAtPointer(this.game.input.activePointer);
-                weapon.fireAtPointer(this.game.input.activePointer);
-                weapon.fireAtPointer(this.game.input.activePointer);
-                weapon.fireAtPointer(this.game.input.activePointer);
-                weapon.fireAtPointer(this.game.input.activePointer);
             }
-            else if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR) && shot === -1) {
-                game.physics.arcade.moveToPointer(player, -60);
-                laser.play();
-                weapon.fireAtPointer(this.game.input.activePointer);
+
+            if (holdFire) {
+                if (fireButton.isDown) {
+                    game.physics.arcade.moveToPointer(player, recoil);
+                    boom.play();
+                    for (var i = 0; i < bulletsPerShot; i++) {
+                        weapon.fireAtPointer(this.game.input.activePointer);
+                    }
+                }
+            }
+            else {
+                if (game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)) {
+                    game.physics.arcade.moveToPointer(player, recoil);
+                    boom.play();
+                    for (var i = 0; i < bulletsPerShot; i++) {
+                        weapon.fireAtPointer(this.game.input.activePointer);
+                    }
+                }
             }
         },
 
