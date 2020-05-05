@@ -6,7 +6,7 @@ GameStates.makeGame = function( game, shared ) {
     var cursors = null, leftKey, rightKey, jumping = false;
     var platformGroup = null;
     var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
-    var enemyGroup = null;
+    var enemyGroup = null, enemiesMade = false;
     var weapon = null, shot = 1, fireButton, bulletGroup, switchFire, bulletsPerShot, holdFire = false, recoil = 0;
     var grappleDeployed = false, firestate = false;
     var map;
@@ -63,7 +63,7 @@ GameStates.makeGame = function( game, shared ) {
             enemyGroup = game.add.group();
             enemyGroup.enableBody = true;
             this.placeEnemies();
-            
+            enemiesMade = true;
             
 
             // Player Section --------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ GameStates.makeGame = function( game, shared ) {
             game.physics.arcade.collide(enemyGroup, layer);
             game.physics.arcade.collide(enemyGroup, weapon.bullets, this.enemyHit);
             
-            if (enemyGroup.countLiving() > 0) {
+            if (enemyGroup.countLiving() > 0 && enemiesMade) {
                 quitGame();
             }
 
