@@ -24,6 +24,7 @@ GameStates.makeGame = function( game, shared ) {
         
         //  Then let's go back to the main menu.
         game.state.start('MainMenu');
+        bgm.stop();
         
     }
     
