@@ -137,7 +137,7 @@ GameStates.makeGame = function( game, shared ) {
                 weaponRecoil: -10
             };
 
-            this.setWeapon(shotgun);
+            this.setWeapon(pistol);
             // -----------------------------------------------------------------------------------------------------
 
             // Add some text using a CSS style.

@@ -45,7 +45,9 @@ GameStates.makePreloader = function( game ) {
             game.load.audio('hit_hurt', 'assets/audio/Hit_Hurt.wav');
             game.load.audio('kill_boom', 'assets/audio/Kill_Boom.wav');
             game.load.audio('laser', 'assets/audio/Laser_Shoot.wav');
-
+            game.load.image('shotgunPU', 'assets/powerup/shotgun.png');
+            game.load.image('riflePU', 'assets/powerup/rifle.png');
+            game.load.image('mgPU', 'assets/powerup/mg.png');
         },
     
         create: function () {
