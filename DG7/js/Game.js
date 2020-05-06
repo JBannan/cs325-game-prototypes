@@ -52,7 +52,7 @@ GameStates.makeGame = function( game, shared ) {
 
             game.physics.arcade.gravity.y = 800;
 
-            map = game.add.tilemap('map',16,16);
+            map = game.add.tilemap('platforms1',16,16);
             map.addTilesetImage('tiles');
 
             layer = map.createLayer(0);
