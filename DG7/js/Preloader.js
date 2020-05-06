@@ -48,6 +48,7 @@ GameStates.makePreloader = function( game ) {
             game.load.image('shotgunPU', 'assets/powerup/shotgun.png');
             game.load.image('riflePU', 'assets/powerup/rifle.png');
             game.load.image('mgPU', 'assets/powerup/mg.png');
+            
         },
     
         create: function () {
