@@ -183,7 +183,7 @@ GameStates.makeGame = function( game, shared ) {
             style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
             text = game.add.text( 15, 15, killCount, style );
             text.fixedToCamera = true;
-            text2 = game.add.text( game.world.width-15, game.world.height-15, wString, style );
+            text2 = game.add.text( 40, 40, wString, style );
             text2.fixedToCamera = true;
 
             this.setWeapon(pistol);
