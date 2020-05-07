@@ -35,7 +35,7 @@ GameStates.makeGame = function( game, shared ) {
     return {
     
         create: function () {
-            
+            console.log('v1.5.4b');
             // line = new Phaser.Line();
             // line2 = new Phaser.Line();
 
