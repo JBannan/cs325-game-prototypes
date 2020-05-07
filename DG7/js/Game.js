@@ -13,9 +13,9 @@ GameStates.makeGame = function( game, shared ) {
     var map, map2, map3, objectMap;
     var layer, layer2, layer3;
     var killCount = 0;
-    var boom, hop, bgm, dead, laser, laserWeapon, MG, pistol, shotgun, weaponList = [], currentWeapon;
+    var boom, hop, bgm, dead, laser, laserWeapon, MG, pistol, shotgun, weaponList = [], currentWeapon, wString = 'Pistol';
     var tiles, tileGroup, tileHits = [];
-    var text, style;
+    var text, style, text2;
     var line, line2, ray, drawLine = false, mouse, mouseSpring;
     
     function quitGame() {
@@ -128,7 +128,8 @@ GameStates.makeGame = function( game, shared ) {
                 fireRate: 1,
                 bulletCount: 1,
                 hold: false,
-                weaponRecoil: -150
+                weaponRecoil: -150,
+                name: 'Rifle'
             };
 
             MG = {
@@ -143,7 +144,8 @@ GameStates.makeGame = function( game, shared ) {
                 fireRate: 30,
                 bulletCount: 1,
                 hold: true,
-                weaponRecoil: -60
+                weaponRecoil: -60,
+                name: 'Machine Gun'
             };
 
             shotgun = {
@@ -158,7 +160,8 @@ GameStates.makeGame = function( game, shared ) {
                 fireRate: 4,
                 bulletCount: 7,
                 hold: false,
-                weaponRecoil: -600
+                weaponRecoil: -600,
+                name: 'Shotgun'
             };
 
             pistol = {
@@ -173,8 +176,15 @@ GameStates.makeGame = function( game, shared ) {
                 fireRate: 15,
                 bulletCount: 1,
                 hold: false,
-                weaponRecoil: -10
+                weaponRecoil: -10,
+                name: 'Pistol'
             };
+
+            style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
+            text = game.add.text( 15, 15, killCount, style );
+            text.fixedToCamera = true;
+            text2 = game.add.text( game.world.width-15, game.world.height-15, wString, style );
+            text2.fixedToCamera = true;
 
             this.setWeapon(pistol);
             weaponList.push(pistol);
@@ -183,9 +193,7 @@ GameStates.makeGame = function( game, shared ) {
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
-            style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
-            text = game.add.text( 15, 15, killCount, style );
-            text.fixedToCamera = true;
+            
             
 
             game.camera.follow(player);
@@ -217,6 +225,11 @@ GameStates.makeGame = function( game, shared ) {
             bulletsPerShot = weaponType.bulletCount;
             holdFire = weaponType.hold;
             recoil = weaponType.weaponRecoil;
+            wString = weaponType.name;
+            text2.destroy();
+            
+            text2 = game.add.text( game.world.width-15, game.world.height-15, wString, style );
+            text2.fixedToCamera = true;
         },
 
         placeEnemies: function () {
