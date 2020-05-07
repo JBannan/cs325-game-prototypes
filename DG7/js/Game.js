@@ -22,7 +22,10 @@ GameStates.makeGame = function( game, shared ) {
 
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
-        
+        weaponList=[]
+        player.destroy();
+        enemyGroup.destroy();
+
         //  Then let's go back to the main menu.
         game.state.start('MainMenu');
         bgm.stop();
@@ -183,7 +186,7 @@ GameStates.makeGame = function( game, shared ) {
             style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
             text = game.add.text( 15, 15, killCount, style );
             text.fixedToCamera = true;
-            text2 = game.add.text( 40, 40, wString, style );
+            text2 = game.add.text( 50, 50, wString, style );
             text2.fixedToCamera = true;
 
             this.setWeapon(pistol);
@@ -288,9 +291,6 @@ GameStates.makeGame = function( game, shared ) {
             game.physics.arcade.collide(enemyGroup, layer);
             game.physics.arcade.collide(enemyGroup, weapon.bullets, this.enemyHit);
             
-            if (enemyGroup.countLiving() < 1 && enemiesMade) {
-                quitGame();
-            }
 
 
             if (game.input.keyboard.justPressed(Phaser.Keyboard.W) && playerDown) {
