@@ -8,9 +8,10 @@ GameStates.makeGame = function( game, shared ) {
     var playerCollisionGroup = null, platformCollisionGroup = null, enemyCollisionGroup = null, bulletCollisionGroup, tileCollisionGroup;
     var enemyGroup = null, enemiesMade = false;
     var weapon = null, shot = 1, fireButton, bulletGroup, switchFire, bulletsPerShot, holdFire = false, recoil = 0;
+    var sgPower, riflePower, mgPower;
     var grappleDeployed = false, firestate = false;
-    var map;
-    var layer;
+    var map, map2, map3, objectMap;
+    var layer, layer2, layer3;
     var killCount = 0;
     var boom, hop, bgm, dead, laser, laserWeapon, MG, pistol, shotgun;
     var tiles, tileGroup, tileHits = [];
@@ -52,19 +53,50 @@ GameStates.makeGame = function( game, shared ) {
 
             game.physics.arcade.gravity.y = 800;
 
-            map = game.add.tilemap('platforms1',16,16);
+            map = game.add.tilemap('map');
             map.addTilesetImage('tiles');
-
-            layer = map.createLayer(0);
+            map.addTilesetImage('powerups');
             
+            map.setCollisionBetween(1, 700, true, 'Tile Layer 1');
+            
+            //map.setCollisionBetween(299, 378, true, 'Tile Layer 3');
+
+            layer2 = map.createLayer('Tile Layer 2');
+            layer3 = map.createLayer('Tile Layer 3');
+
+            layer = map.createLayer('Tile Layer 1');
             layer.resizeWorld();
 
-            map.setCollisionBetween(1, 467);
             
+            // map2 = game.add.tilemap('bgTiles', 16, 16);
+            // map3 = game.add.tilemap('finishBox', 16, 16);
+            // map2.addTilesetImage('tiles');
+            // map3.addTilesetImage('tiles');
+            // map = game.add.tilemap('platforms1',16,16);
+            // map.addTilesetImage('tiles');
+
+            
+            // layer2 = map2.createLayer(0);
+            // layer3 = map3.createLayer(0);
+            // layer = map.createLayer(0);
+            // layer.resizeWorld();
+
+            // map.setCollisionBetween(1, 700);
+            // map3.setCollisionBetween(200,400);
+
+            sgPower = game.add.group();
+            sgPower.enableBody = true;
+
+            map.createFromObjects('PowerUps', 810, 'powerups', 2, true, false, sgPower);
+
+ 
             enemyGroup = game.add.group();
             enemyGroup.enableBody = true;
             this.placeEnemies();
             enemiesMade = true;
+
+            // objectMap = game.add.tilemap('objectMap');
+            // objectMap.createFromObjects('Objects', 1, 'segments', 0, true, false, enemyGroup);
             
 
             // Player Section --------------------------------------------------------------------------------------
@@ -183,15 +215,21 @@ GameStates.makeGame = function( game, shared ) {
                 let randX = Math.random() * 1600;
                 let randY = Math.random() * 1200;
                 if (map.getTileWorldXY(randX, randY, 16, 16, layer) != null) {
-                    randX = Math.random() * 1600;
-                    randY = Math.random() * 1200;
+                    randX = Math.random() * 1580;
+                    randY = Math.random() * 120;
                 }
                 enemyGroup.create(randX, randY, 'segments', 0);
             }
         },
+
+        addSG: function (player, weapon) {
+            
+        },
     
         update: function () {
             var playerDown = game.physics.arcade.collide(player, layer);
+            game.physics.arcade.collide(sgPower, layer);
+            game.physics.arcade.collide(sgPower, player, addSG);
             game.physics.arcade.collide(weapon.bullets, layer);
             game.physics.arcade.collide(enemyGroup, layer);
             game.physics.arcade.collide(enemyGroup, weapon.bullets, this.enemyHit);

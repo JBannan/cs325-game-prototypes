@@ -34,10 +34,10 @@ GameStates.makePreloader = function( game ) {
             game.load.image('bigBG', 'assets/backgrounds/Big_Silo.png');
             game.load.spritesheet( 'segments', 'assets/segments.png', 16, 32);
             game.load.image('tiles', 'assets/tiles/scifi_platformTiles_16x16.png');
-            game.load.tilemap('map', 'assets/tiles/map2_1.csv', null, Phaser.Tilemap.CSV);
-            game.load.tilemap('platforms1', 'assets/tiles/map2_1_Tile Layer 1.csv', null, Phaser.Tilemap.CSV);
-            game.load.tilemap('bgTiles1', 'assets/tiles/map2_1_Tile Layer 2.csv', null, Phaser.Tilemap.CSV);
-            game.load.tilemap('finishBox', 'assets/tiles/map2_1_Tile Layer 3.csv', null, Phaser.Tilemap.CSV);
+            game.load.tilemap('map', 'assets/tiles/map.json', null, Phaser.Tilemap.TILED_JSON);
+            // game.load.tilemap('platforms1', 'assets/tiles/map2_1_Tile Layer 1.csv', null, Phaser.Tilemap.CSV);
+            // game.load.tilemap('bgTiles', 'assets/tiles/map2_1_Tile Layer 2.csv', null, Phaser.Tilemap.CSV);
+            // game.load.tilemap('finishBox', 'assets/tiles/map2_1_Tile Layer 3.csv', null, Phaser.Tilemap.CSV);
             game.load.image('bullet', 'assets/bullet.png');
             game.load.audio('boom', 'assets/audio/Explosion.wav');
             game.load.audio('hop', 'assets/audio/Jump.wav');
@@ -45,10 +45,11 @@ GameStates.makePreloader = function( game ) {
             game.load.audio('hit_hurt', 'assets/audio/Hit_Hurt.wav');
             game.load.audio('kill_boom', 'assets/audio/Kill_Boom.wav');
             game.load.audio('laser', 'assets/audio/Laser_Shoot.wav');
-            game.load.image('shotgunPU', 'assets/powerup/shotgun.png');
-            game.load.image('riflePU', 'assets/powerup/rifle.png');
-            game.load.image('mgPU', 'assets/powerup/mg.png');
-            
+            // game.load.image('shotgunPU', 'assets/powerup/shotgun.png');
+            // game.load.image('riflePU', 'assets/powerup/rifle.png');
+            // game.load.image('mgPU', 'assets/powerup/mg.png');
+            // game.load.tilemap('objectMap', 'assets/tiles/map2_1.json', null, Phaser.Tilemap.TILED_JSON);
+            game.load.spritesheet('powerups', 'assets/powerup/SSpowerups.png', 32, 32);
         },
     
         create: function () {
