@@ -22,7 +22,7 @@ GameStates.makeGame = function( game, shared ) {
 
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
-        weaponList=[]
+        weaponList=[];
         player.destroy();
         enemyGroup.destroy();
 
@@ -35,7 +35,7 @@ GameStates.makeGame = function( game, shared ) {
     return {
     
         create: function () {
-            console.log('v1.5.4c');
+            console.log('v1.5.4d');
             // line = new Phaser.Line();
             // line2 = new Phaser.Line();
 
@@ -183,7 +183,11 @@ GameStates.makeGame = function( game, shared ) {
                 name: 'Pistol'
             };
 
-            
+            style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
+            text = game.add.text( 15, 15, killCount, style );
+            text.fixedToCamera = true;
+            text2 = game.add.text( 50, 50, wString, style );
+            text2.fixedToCamera = true;
 
             this.setWeapon(pistol);
             weaponList.push(pistol);
@@ -192,11 +196,7 @@ GameStates.makeGame = function( game, shared ) {
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
-            style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
-            text = game.add.text( 15, 15, killCount, style );
-            text.fixedToCamera = true;
-            text2 = game.add.text( 50, 50, wString, style );
-            text2.fixedToCamera = true;
+            
             
 
             game.camera.follow(player);
