@@ -13,7 +13,7 @@ GameStates.makeGame = function( game, shared ) {
     var map, map2, map3, objectMap;
     var layer, layer2, layer3;
     var killCount = 0;
-    var boom, hop, bgm, dead, laser, laserWeapon, MG, pistol, shotgun;
+    var boom, hop, bgm, dead, laser, laserWeapon, MG, pistol, shotgun, weaponList = [], currentWeapon;
     var tiles, tileGroup, tileHits = [];
     var text, style;
     var line, line2, ray, drawLine = false, mouse, mouseSpring;
@@ -59,12 +59,13 @@ GameStates.makeGame = function( game, shared ) {
             
             map.setCollisionBetween(1, 700, true, 'Tile Layer 1');
             
-            //map.setCollisionBetween(299, 378, true, 'Tile Layer 3');
+            map.setCollisionBetween(299, 378, true, 'Tile Layer 3');
 
             layer2 = map.createLayer('Tile Layer 2');
-            layer3 = map.createLayer('Tile Layer 3');
+            
 
             layer = map.createLayer('Tile Layer 1');
+            layer3 = map.createLayer('Tile Layer 3');
             layer.resizeWorld();
 
             
@@ -86,9 +87,15 @@ GameStates.makeGame = function( game, shared ) {
 
             sgPower = game.add.group();
             sgPower.enableBody = true;
-
             map.createFromObjects('PowerUps', 810, 'powerups', 2, true, false, sgPower);
 
+            mgPower = game.add.group();
+            mgPower.enableBody = true;
+            map.createFromObjects('PowerUps', 808, 'powerups', 0, true, false, mgPower);
+
+            riflePower = game.add.group();
+            riflePower.enableBody = true;
+            map.createFromObjects('PowerUps', 809, 'powerups', 1, true, false, riflePower);
  
             enemyGroup = game.add.group();
             enemyGroup.enableBody = true;
@@ -121,7 +128,7 @@ GameStates.makeGame = function( game, shared ) {
                 fireRate: 1,
                 bulletCount: 1,
                 hold: false,
-                weaponRecoil: -60
+                weaponRecoil: -150
             };
 
             MG = {
@@ -130,7 +137,7 @@ GameStates.makeGame = function( game, shared ) {
                 speed: 780,
                 gravity: 400,
                 angleVariance: 10,
-                tint: 0xFF2222,
+                tint: 0x11ff22,
                 multiple: true,
                 speedVariance: 0,
                 fireRate: 30,
@@ -170,6 +177,8 @@ GameStates.makeGame = function( game, shared ) {
             };
 
             this.setWeapon(pistol);
+            weaponList.push(pistol);
+            currentWeapon = pistol;
             // -----------------------------------------------------------------------------------------------------
 
             // Add some text using a CSS style.
@@ -222,14 +231,46 @@ GameStates.makeGame = function( game, shared ) {
             }
         },
 
-        addSG: function (player, weapon) {
-            
+        addSG: function (player, weaponType) {
+            weaponType.kill();
+            weaponList.push(shotgun);
+        },
+
+        addMG: function (player, weaponType) {
+            weaponType.kill();
+            weaponList.push(MG);
+        },
+
+        addRifle: function (player, weaponType) {
+            weaponType.kill();
+            weaponList.push(laserWeapon);
+        },
+
+        cycleWeapon: function () {
+            if (weaponList.length > 1) {
+                var i = weaponList.indexOf(currentWeapon);
+                i++;
+                if (i >= weaponList.length) {
+                    i=0;
+                }
+                currentWeapon = weaponList[i];
+                this.setWeapon(currentWeapon);
+            }
+        },
+
+        finishLine: function () {
+            quitGame();
         },
     
         update: function () {
             var playerDown = game.physics.arcade.collide(player, layer);
+            game.physics.arcade.collide(player, layer3, this.finishLine);
             game.physics.arcade.collide(sgPower, layer);
-            game.physics.arcade.collide(sgPower, player, addSG);
+            game.physics.arcade.collide(mgPower, layer);
+            game.physics.arcade.collide(riflePower, layer);
+            game.physics.arcade.collide(sgPower, player, this.addSG);
+            game.physics.arcade.collide(mgPower, player, this.addMG);
+            game.physics.arcade.collide(riflePower, player, this.addRifle);
             game.physics.arcade.collide(weapon.bullets, layer);
             game.physics.arcade.collide(enemyGroup, layer);
             game.physics.arcade.collide(enemyGroup, weapon.bullets, this.enemyHit);
@@ -260,7 +301,7 @@ GameStates.makeGame = function( game, shared ) {
 
             if (game.input.keyboard.justPressed(Phaser.Keyboard.X)) {
                 weapon.killAll();
-                
+                this.cycleWeapon();
             }
 
             if (holdFire) {
