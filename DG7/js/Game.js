@@ -35,7 +35,7 @@ GameStates.makeGame = function( game, shared ) {
     return {
     
         create: function () {
-            console.log('v1.5.4b');
+            console.log('v1.5.4c');
             // line = new Phaser.Line();
             // line2 = new Phaser.Line();
 
@@ -183,11 +183,7 @@ GameStates.makeGame = function( game, shared ) {
                 name: 'Pistol'
             };
 
-            style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
-            text = game.add.text( 15, 15, killCount, style );
-            text.fixedToCamera = true;
-            text2 = game.add.text( 50, 50, wString, style );
-            text2.fixedToCamera = true;
+            
 
             this.setWeapon(pistol);
             weaponList.push(pistol);
@@ -196,7 +192,11 @@ GameStates.makeGame = function( game, shared ) {
 
             // Add some text using a CSS style.
             // Center it in X, and position its top 15 pixels from the top of the world.
-            
+            style = { font: "20px Verdana", fill: "#ffffff", align: "center" };
+            text = game.add.text( 15, 15, killCount, style );
+            text.fixedToCamera = true;
+            text2 = game.add.text( 50, 50, wString, style );
+            text2.fixedToCamera = true;
             
 
             game.camera.follow(player);
@@ -233,6 +233,7 @@ GameStates.makeGame = function( game, shared ) {
             
             text2 = game.add.text( game.world.width-15, game.world.height-15, wString, style );
             text2.fixedToCamera = true;
+            console.log(wString);
         },
 
         placeEnemies: function () {
