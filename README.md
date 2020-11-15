@@ -1,5 +1,10 @@
 # GMU CS325 Introduction to Game Design
 
+Repository of my games developed in JavaScript using Phaser 2 for my Game Design class.
+Playable in browser at https://jbannan.github.io/cs325-game-prototypes/
+
+
+
 This repository contains all of your games as well as a few simple "hello, world!"
 templates for a game made with Phaser.
 This repository should be marked as GitHub Pages. This lets you run your games directly from github!
